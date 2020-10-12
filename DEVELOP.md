@@ -1,4 +1,4 @@
-# volto-addon-template
+# volto-taxonomy
 
 ## Develop
 
@@ -25,16 +25,16 @@ Before starting make sure your development environment is properly set. See [Vol
             },
 
             "addons": [
-                "@eeacms/volto-addon-template"
+                "@eeacms/volto-taxonomy"
             ],
         }
 
 1. Add the following to `mrs.developer.json`:
 
         {
-            "volto-addon-template": {
-                "url": "https://github.com/eea/volto-addon-template.git",
-                "package": "@eeacms/volto-addon-template",
+            "volto-taxonomy": {
+                "url": "https://github.com/eea/volto-taxonomy.git",
+                "package": "@eeacms/volto-taxonomy",
                 "branch": "develop",
                 "path": "src"
             }
@@ -63,4 +63,4 @@ Before starting make sure your development environment is properly set. See [Vol
 
 1. Happy hacking!
 
-        $ cd src/addons/volto-addon-template/
+        $ cd src/addons/volto-taxonomy/
