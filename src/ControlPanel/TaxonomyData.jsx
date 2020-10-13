@@ -2,11 +2,66 @@ import React from 'react';
 import { isEqual } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContent } from '@plone/volto/actions';
-import { Segment, Ref, Button, Label, Table } from 'semantic-ui-react';
+import {
+  Grid,
+  Segment,
+  Ref,
+  Button,
+  Label,
+  Input,
+  Table,
+} from 'semantic-ui-react';
 import { Icon } from '@plone/volto/components';
 import { DragDropList } from '@eeacms/volto-blocks-form/components';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 import dragSVG from '@plone/volto/icons/drag.svg';
+import { v4 as uuid } from 'uuid';
+
+const TermInput = ({ entry, onChange }) => {
+  const [isEditing, setEditing] = React.useState();
+  return isEditing ? (
+    <Grid columns={2}>
+      <Grid.Row>
+        <Grid.Column>
+          <div>
+            <Label>Title</Label>
+          </div>
+          <Input
+            value={entry.title}
+            onChange={(ev, { value }) => {
+              onChange('title', value);
+            }}
+          />
+        </Grid.Column>
+        <Grid.Column>
+          <div>
+            <Label>Token</Label>
+          </div>
+          <Input
+            value={entry.token}
+            onChange={(e, { value }) => {
+              onChange('token', value);
+            }}
+          />
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Button
+          compact
+          onClick={() => {
+            setEditing(false);
+          }}
+        >
+          OK
+        </Button>
+      </Grid.Row>
+    </Grid>
+  ) : (
+    <Button title={entry.token} compact basic onClick={() => setEditing(true)}>
+      <span>{entry.title}</span>
+    </Button>
+  );
+};
 
 const TaxonomyData = (props) => {
   const { id } = props;
@@ -35,9 +90,6 @@ const TaxonomyData = (props) => {
       .fill(0)
       .map((_, i) => [i, i]);
   }
-
-  // console.log('data', request);
-  // console.log('childlist', childList);
 
   return (
     <Segment.Group>
@@ -84,9 +136,18 @@ const TaxonomyData = (props) => {
                       const entry = state.data[lang][i];
                       return (
                         <Table.Cell key={lang}>
-                          <Label title={entry.token}>
-                            <span>{entry.title}</span>
-                          </Label>
+                          <TermInput
+                            entry={entry}
+                            onChange={(id, value) => {
+                              const newState = { ...state };
+                              newState.data[lang][i] = {
+                                ...newState.data[lang][i],
+                                [id]: value,
+                              };
+
+                              setState(newState);
+                            }}
+                          />
                         </Table.Cell>
                       );
                     })}
@@ -107,7 +168,18 @@ const TaxonomyData = (props) => {
         </Table>
       </Segment>
       <Segment>
-        <Button>Add new entry</Button>
+        <Button
+          onClick={() => {
+            const newState = { ...state };
+            Object.keys(state.data).forEach((lang) => {
+              newState.data[lang].push({ token: uuid(), title: '...' });
+              newState.order[lang].push(newState.order[lang].length);
+            });
+            setState(newState);
+          }}
+        >
+          Add new entry
+        </Button>
         <Button floated="right">Save</Button>
       </Segment>
     </Segment.Group>
