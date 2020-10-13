@@ -1,5 +1,6 @@
 import EditTaxonomy from './ControlPanel/EditTaxonomy';
 import Taxonomies from './ControlPanel/Taxonomies';
+import { taxonomy } from './reducers';
 
 const applyConfig = (config) => {
   config.addonRoutes = [
@@ -19,6 +20,11 @@ const applyConfig = (config) => {
     /\/collective-taxonomy$/,
     /\/collective-taxonomy\/.*$/,
   ];
+
+  config.addonReducers = {
+    ...config.addonReducers,
+    taxonomy,
+  };
 
   return config;
 };

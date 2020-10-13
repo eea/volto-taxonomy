@@ -1,86 +1,38 @@
 import React from 'react';
 import { isEqual } from 'lodash';
+import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContent } from '@plone/volto/actions';
-import {
-  Grid,
-  Segment,
-  Ref,
-  Button,
-  Label,
-  Input,
-  Table,
-} from 'semantic-ui-react';
+import { Segment, Ref, Button, Table } from 'semantic-ui-react';
+import { getTaxonomy, updateTaxonomy } from '../actions';
 import { Icon } from '@plone/volto/components';
 import { DragDropList } from '@eeacms/volto-blocks-form/components';
+
 import deleteSVG from '@plone/volto/icons/delete.svg';
 import dragSVG from '@plone/volto/icons/drag.svg';
-import { v4 as uuid } from 'uuid';
 
-const TermInput = ({ entry, onChange }) => {
-  const [isEditing, setEditing] = React.useState();
-  return isEditing ? (
-    <Grid columns={2}>
-      <Grid.Row>
-        <Grid.Column>
-          <div>
-            <Label>Title</Label>
-          </div>
-          <Input
-            value={entry.title}
-            onChange={(ev, { value }) => {
-              onChange('title', value);
-            }}
-          />
-        </Grid.Column>
-        <Grid.Column>
-          <div>
-            <Label>Token</Label>
-          </div>
-          <Input
-            value={entry.token}
-            onChange={(e, { value }) => {
-              onChange('token', value);
-            }}
-          />
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row>
-        <Button
-          compact
-          onClick={() => {
-            setEditing(false);
-          }}
-        >
-          OK
-        </Button>
-      </Grid.Row>
-    </Grid>
-  ) : (
-    <Button title={entry.token} compact basic onClick={() => setEditing(true)}>
-      <span>{entry.title}</span>
-    </Button>
-  );
-};
+import TermInput from './TermInput';
 
 const TaxonomyData = (props) => {
   const { id } = props;
-  const url = `/@taxonomy-data/${id}`;
+  const url = `/@taxonomy/${id}`;
   const dispatch = useDispatch();
-  const request = useSelector((state) => state.content.subrequests[url]);
   const dataLoaded = React.useRef(false);
   const [state, setState] = React.useState({});
+  const taxonomy = useSelector((state) => state.taxonomy);
+  const request = taxonomy.get;
+  const { loading, loaded, error } = request || {};
+  const data = taxonomy?.data?.[url];
 
   React.useEffect(() => {
-    if (!request && id) {
-      dispatch(getContent(url, null, url));
+    if (id && !loaded && !loading) {
+      const action = getTaxonomy(url);
+      dispatch(action);
     }
-    const reqData = request?.data || {};
-    if (reqData && !isEqual(reqData, state) && !dataLoaded.current) {
+    if (data && !isEqual(data, state) && !dataLoaded.current) {
       dataLoaded.current = true;
-      setState(reqData);
+      setState(data);
     }
-  }, [request, dispatch, url, id, state, request?.data]);
+  }, [dispatch, url, id, state, data, loading, loaded, error]);
 
   let langs = [];
   let childList = [];
@@ -180,7 +132,14 @@ const TaxonomyData = (props) => {
         >
           Add new entry
         </Button>
-        <Button floated="right">Save</Button>
+        <Button
+          floated="right"
+          onClick={() => {
+            dispatch(updateTaxonomy(url, state));
+          }}
+        >
+          Save
+        </Button>
       </Segment>
     </Segment.Group>
   );

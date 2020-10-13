@@ -15,7 +15,7 @@ export default (props) => {
   const isClient = React.useRef(false);
   // const [activeTab, setActiveTab] = React.useState(0);
   const { id } = props.match.params;
-  const url = `/@taxonomy-data/${id}`;
+  const url = `/@taxonomy/${id}`;
   const dispatch = useDispatch();
   const request = useSelector((state) => state.content.subrequests[url]);
 

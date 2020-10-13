@@ -14,7 +14,7 @@ import backSVG from '@plone/volto/icons/back.svg';
 
 export default (props) => {
   const isClient = React.useRef(false);
-  const url = '/@taxonomy-data';
+  const url = '/@taxonomy';
   const request = useSelector((state) => state.content.subrequests[url]);
   const dispatch = useDispatch();
 
@@ -23,7 +23,6 @@ export default (props) => {
     if (!request) {
       dispatch(getContent(url, null, url));
     }
-    console.log(request);
   }, [request, dispatch]);
 
   return (
