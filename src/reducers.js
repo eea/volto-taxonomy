@@ -20,7 +20,6 @@ export function taxonomy(state = initialState, action) {
       };
     case `${GET_TAXONOMY}_SUCCESS`:
     case `${UPDATE_TAXONOMY}_SUCCESS`:
-      console.log('action', action);
       return {
         ...state,
         data: {
