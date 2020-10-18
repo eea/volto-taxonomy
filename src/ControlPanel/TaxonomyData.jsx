@@ -12,6 +12,13 @@ import dragSVG from '@plone/volto/icons/drag.svg';
 
 import TermInput from './TermInput';
 
+const fixData = (data) => {
+  Object.keys(data.order || {}).forEach((lang) => {
+    data.order[lang].length = data.data?.[lang].length;
+  });
+  return data;
+};
+
 const TaxonomyData = (props) => {
   const { id } = props;
   const url = `/@taxonomy/${id}`;
@@ -30,7 +37,7 @@ const TaxonomyData = (props) => {
     }
     if (data && !isEqual(data, state) && !dataLoaded.current) {
       dataLoaded.current = true;
-      setState(data);
+      setState(fixData(data));
     }
   }, [dispatch, url, id, state, data, loading, loaded, error]);
 
@@ -40,7 +47,7 @@ const TaxonomyData = (props) => {
     langs = Object.keys(state?.data || {}).sort();
     childList = Array(state?.data?.[langs[0]].length)
       .fill(0)
-      .map((_, i) => [i, i]);
+      .map((_, i) => [i.toString(), i.toString()]);
   }
 
   return (
