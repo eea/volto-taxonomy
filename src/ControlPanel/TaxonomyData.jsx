@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Segment, Ref, Button, Table } from 'semantic-ui-react';
 import { getTaxonomy, updateTaxonomy } from '../actions';
 import { Icon } from '@plone/volto/components';
-import { DragDropList } from '@eeacms/volto-blocks-form/components';
+import { DragDropList } from '@plone/volto/components';
 
 import deleteSVG from '@plone/volto/icons/delete.svg';
 import dragSVG from '@plone/volto/icons/drag.svg';
