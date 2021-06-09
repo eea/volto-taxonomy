@@ -7,7 +7,7 @@
 
 ## Features
 
-Demo GIF
+Edit collective.taxonomy entries via Volto Site Setup > Taxonomies
 
 ## Getting started
 
@@ -69,6 +69,20 @@ Demo GIF
 1. Go to http://localhost:3000
 
 1. Happy editing!
+
+
+## Dependencies
+
+### Backend
+
+- [Plone](https://plone.org/download)
+- [plone.restapi](https://pypi.org/project/plone.restapi/)
+- [eea.api.taxonomy](https://pypi.org/project/eea.api.taxonomy)
+
+### Frontend
+
+- [Volto](https://github.com/plone/volto)
+
 
 ## How to contribute
 

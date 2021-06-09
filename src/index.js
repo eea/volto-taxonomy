@@ -5,20 +5,14 @@ import { taxonomy } from './reducers';
 const applyConfig = (config) => {
   config.addonRoutes = [
     {
-      path: '/collective-taxonomy/:id',
+      path: '/controlpanel/taxonomies/:id',
       component: EditTaxonomy,
     },
     {
-      path: '/collective-taxonomy',
+      path: '/controlpanel/taxonomies',
       component: Taxonomies,
     },
     ...(config.addonRoutes || []),
-  ];
-
-  config.settings.nonContentRoutes = [
-    ...config.settings.nonContentRoutes,
-    /\/collective-taxonomy$/,
-    /\/collective-taxonomy\/.*$/,
   ];
 
   config.addonReducers = {
