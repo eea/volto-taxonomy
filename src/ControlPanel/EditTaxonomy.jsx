@@ -8,19 +8,16 @@ import { Link } from 'react-router-dom';
 import { getContent } from '@plone/volto/actions';
 import backSVG from '@plone/volto/icons/back.svg';
 
-import TaxonomySettings from './TaxonomySettings';
+// import TaxonomySettings from './TaxonomySettings';
 import TaxonomyData from './TaxonomyData';
 
 export default (props) => {
-  const isClient = React.useRef(false);
-  // const [activeTab, setActiveTab] = React.useState(0);
   const { id } = props.match.params;
   const url = `/@taxonomy/${id}`;
   const dispatch = useDispatch();
   const request = useSelector((state) => state.content.subrequests[url]);
 
   React.useEffect(() => {
-    isClient.current = true;
     if (!request) {
       dispatch(getContent(url, null, url));
     }
@@ -57,28 +54,28 @@ export default (props) => {
                     </Tab.Pane>
                   ),
                 },
-                {
-                  menuItem: 'Edit taxonomy',
-                  render: () => (
-                    <Tab.Pane>
-                      <TaxonomySettings />
-                    </Tab.Pane>
-                  ),
-                },
+                // {
+                //   menuItem: 'Edit taxonomy',
+                //   render: () => (
+                //     <Tab.Pane>
+                //       <TaxonomySettings />
+                //     </Tab.Pane>
+                //   ),
+                // },
               ]}
             />
           </Segment>
         </Segment.Group>
       </Container>
 
-      {isClient.current && (
+      {__CLIENT__ && (
         <Portal node={document.getElementById('toolbar')}>
           <Toolbar
             pathname={props.location.pathname}
             hideDefaultViewButtons
             inner={
               <>
-                <Link to="/controlpanel" className="item">
+                <Link to="/controlpanel/taxonomies" className="item">
                   <Icon
                     name={backSVG}
                     aria-label="Back"
