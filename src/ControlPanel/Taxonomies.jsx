@@ -49,7 +49,7 @@ export default (props) => {
             </Table.Header>
             <Table.Body>
               {request?.data?.items?.map((item) => (
-                <Table.Row key={item['@id']}>
+                <Table.Row key={item['name']}>
                   <Table.Cell>
                     <Link to={`${props.location.pathname}/${item['name']}`}>
                       {item.title}
