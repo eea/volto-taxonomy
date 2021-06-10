@@ -13,13 +13,11 @@ import { Portal } from 'react-portal';
 import backSVG from '@plone/volto/icons/back.svg';
 
 export default (props) => {
-  const isClient = React.useRef(false);
   const url = '/@taxonomy';
   const request = useSelector((state) => state.content.subrequests[url]);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    isClient.current = true;
     if (!request) {
       dispatch(getContent(url, null, url));
     }
@@ -57,7 +55,7 @@ export default (props) => {
                       {item.title}
                     </Link>
                   </Table.Cell>
-                  <Table.Cell>{JSON.stringify(item.count)}</Table.Cell>
+                  <Table.Cell>{item?.count?.en}</Table.Cell>
                   <Table.Cell textAlign="right"></Table.Cell>
                 </Table.Row>
               ))}
@@ -66,7 +64,7 @@ export default (props) => {
         </Segment>
       </Segment.Group>
 
-      {isClient.current && (
+      {__CLIENT__ && (
         <Portal node={document.getElementById('toolbar')}>
           <Toolbar
             pathname={props.location.pathname}

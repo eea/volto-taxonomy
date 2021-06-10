@@ -7,7 +7,7 @@ import { getTaxonomy, updateTaxonomy } from '../actions';
 import { Icon } from '@plone/volto/components';
 import { DragDropList } from '@plone/volto/components';
 
-import deleteSVG from '@plone/volto/icons/delete.svg';
+// import deleteSVG from '@plone/volto/icons/delete.svg';
 import dragSVG from '@plone/volto/icons/drag.svg';
 
 import TermInput from './TermInput';
@@ -111,13 +111,13 @@ const TaxonomyData = (props) => {
                       );
                     })}
                     <Table.Cell>
-                      <Button basic onClick={() => {}}>
+                      {/* <Button basic onClick={() => {}}>
                         <Icon
                           className="circled"
                           name={deleteSVG}
                           size="12px"
                         />
-                      </Button>
+                      </Button> */}
                     </Table.Cell>
                   </Table.Row>
                 </Ref>
