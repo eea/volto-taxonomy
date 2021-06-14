@@ -41,10 +41,10 @@ const TaxonomyData = (props) => {
     }
   }, [dispatch, url, id, state, data, loading, loaded, error]);
 
-  let langs = [];
+  let langs = ['en'];
   let childList = [];
   if (state.data) {
-    langs = Object.keys(state?.data || {}).sort();
+    // langs = Object.keys(state?.data || {}).sort();
     childList = Array(state?.data?.[langs[0]].length)
       .fill(0)
       .map((_, i) => [i.toString(), i.toString()]);
