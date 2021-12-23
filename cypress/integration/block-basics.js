@@ -26,8 +26,26 @@ describe('Blocks Tests', () => {
     cy.get('#toolbar-save').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
 
-    // then the page view should contain our changes
     cy.contains('My Add-on Page');
     cy.get('.block.image');
+
+    cy.get('.toolbar-bottom #toolbar-personal').click();
+    cy.get('.toolbar-content.show .pastanaga-menu-list').contains('Site Setup').click();
+    
+    cy.get('.controlpanel').contains('Taxonomies').click();
+    cy.get('.controlpanel-taxonomies .single.line.striped.compact.table').contains('NUTS Levels').click();
+
+    cy.get('.single.line.attached.compact.table').contains('Level 0').click();
+
+    cy.get('.ui.input').eq(1).type("Test");
+    cy.get('.ui.compact.button').contains("OK").click();
+
+    cy.get('.ui.segment button').contains('Add new entry').click();
+
+    cy.get('.single.line.attached.compact.table svg').first().trigger('mousedown', { which: 1 }, { force: true }).trigger('mousemove', 0, 120, {force: true}).trigger('mouseup');
+    cy.contains('Save').click();
+
+    // then the page view should contain our changes
+    
   });
 });
