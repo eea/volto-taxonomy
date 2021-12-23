@@ -29,6 +29,27 @@ describe('Blocks Tests', () => {
     cy.contains('My Add-on Page');
     cy.get('.block.image');
 
+
+
+    cy.get('.toolbar-bottom #toolbar-personal').click();
+    cy.get('.toolbar-content.show .pastanaga-menu-list').contains('Site Setup').click();
+
+    //install taxonomies
+
+    cy.get('.controlpanel').contains('Add-Ons').click();
+    cy.get('.accordion.ui').contains('collective.taxonomy').click();
+
+    cy.get('.content.active button').then(($btn) => {
+      if ($btn.hasClass('installAction')) {
+        cy.get('.content.active button').click();
+    }});
+
+    cy.get('.accordion.ui').contains('eea.api.taxonomy').click();
+    cy.get('.content.active button').then(($btn) => {
+      if ($btn.hasClass('installAction')) {
+        cy.get('.content.active button').click();
+    }});
+    
     cy.get('.toolbar-bottom #toolbar-personal').click();
     cy.get('.toolbar-content.show .pastanaga-menu-list').contains('Site Setup').click();
     
