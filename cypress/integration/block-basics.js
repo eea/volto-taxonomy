@@ -50,8 +50,7 @@ describe('Blocks Tests', () => {
         cy.get('.content.active button').click();
     }});
     
-    cy.get('.toolbar-bottom #toolbar-personal').click();
-    cy.get('.toolbar-content.show .pastanaga-menu-list').contains('Site Setup').click();
+    cy.get('.toolbar-actions a').first().click();
     
     cy.get('.controlpanel').contains('Taxonomies').click();
     cy.get('.controlpanel-taxonomies .single.line.striped.compact.table').contains('NUTS Levels').click();
