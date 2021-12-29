@@ -52,19 +52,16 @@ describe('Blocks Tests', () => {
       }
     });
 
-    cy.get('.toolbar-bottom #toolbar-personal').click();
-    cy.get('.toolbar-content.show .pastanaga-menu-list')
-      .contains('Site Setup')
-      .click();
+    cy.get('.toolbar-actions .item').click();
 
     cy.get('.controlpanel').contains('Taxonomies').click();
     cy.get('.controlpanel-taxonomies .single.line.striped.compact.table')
-      .contains('NUTS Levels')
+      .contains('Country Names Mappings')
       .click();
 
-    cy.get('.single.line.attached.compact.table').contains('Level 0').click();
+    cy.get('.single.line.attached.compact.table').contains('Czechia').click();
 
-    cy.get('.ui.input').eq(1).type('Test');
+    cy.get('.controlpanel-taxonomies .ui.input').eq(1).click().type('czechia');
     cy.get('.ui.compact.button').contains('OK').click();
 
     cy.get('.ui.segment button').contains('Add new entry').click();
