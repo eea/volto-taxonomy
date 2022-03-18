@@ -1,4 +1,4 @@
-import { GET_TAXONOMY, UPDATE_TAXONOMY } from './constants';
+import { GET_TAXONOMY, UPDATE_TAXONOMY, GET_TAXONOMYSCHEMA } from './constants';
 import { nestContent } from '@plone/volto/helpers';
 
 export function updateTaxonomy(url, content) {
@@ -14,5 +14,17 @@ export function getTaxonomy(url) {
     url,
     type: GET_TAXONOMY,
     request: { op: 'get', path: url },
+  };
+}
+
+export function getTaxonomySchema(url) {
+  return {
+    url,
+    type: GET_TAXONOMYSCHEMA,
+    request: {
+      op: 'get',
+      path: url,
+      headers: { Accept: 'application/json' },
+    },
   };
 }

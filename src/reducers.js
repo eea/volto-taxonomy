@@ -1,4 +1,4 @@
-import { GET_TAXONOMY, UPDATE_TAXONOMY } from './constants';
+import { GET_TAXONOMY, UPDATE_TAXONOMY, GET_TAXONOMYSCHEMA } from './constants';
 
 const initialState = {};
 
@@ -18,12 +18,37 @@ export function taxonomy(state = initialState, action) {
           error: null,
         },
       };
+    case `${GET_TAXONOMYSCHEMA}_PENDING`:
+      return {
+        ...state,
+        schema: {
+          [getRequestKey(action.type)]: {
+            loading: true,
+            loaded: false,
+            error: null,
+          },
+        },
+      };
+
     case `${GET_TAXONOMY}_SUCCESS`:
     case `${UPDATE_TAXONOMY}_SUCCESS`:
       return {
         ...state,
         data: {
           ...state.data,
+          [action.url]: action.result,
+        },
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: true,
+          error: null,
+        },
+      };
+    case `${GET_TAXONOMYSCHEMA}_SUCCESS`:
+      return {
+        ...state,
+        schema: {
+          ...state.schema,
           [action.url]: action.result,
         },
         [getRequestKey(action.type)]: {
@@ -42,6 +67,18 @@ export function taxonomy(state = initialState, action) {
           error: action.error,
         },
       };
+    case `${GET_TAXONOMYSCHEMA}_FAIL`:
+      return {
+        ...state,
+        schema: {
+          [getRequestKey(action.type)]: {
+            loading: false,
+            loaded: false,
+            error: action.error,
+          },
+        },
+      };
+
     default:
       break;
   }

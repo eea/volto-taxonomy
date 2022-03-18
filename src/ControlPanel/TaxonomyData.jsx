@@ -14,7 +14,7 @@ import TermInput from './TermInput';
 
 const fixData = (data) => {
   Object.keys(data.order || {}).forEach((lang) => {
-    data.order[lang].length = data.data?.[lang].length;
+    data.order[lang].length = data.data?.[lang]?.length;
   });
   return data;
 };
@@ -41,11 +41,11 @@ const TaxonomyData = (props) => {
     }
   }, [dispatch, url, id, state, data, loading, loaded, error]);
 
-  let langs = ['en'];
+  let langs = ['en-gb'];
   let childList = [];
   if (state.data) {
     // langs = Object.keys(state?.data || {}).sort();
-    childList = Array(state?.data?.[langs[0]].length)
+    childList = Array(state?.data?.[langs[0]]?.length)
       .fill(0)
       .map((_, i) => [i.toString(), i.toString()]);
   }
@@ -132,7 +132,7 @@ const TaxonomyData = (props) => {
             const newState = { ...state };
             Object.keys(state.data).forEach((lang) => {
               newState.data[lang].push({ token: uuid(), title: '...' });
-              newState.order[lang].push(newState.order[lang].length);
+              newState.order[lang].push(newState.order[lang]?.length);
             });
             setState(newState);
           }}
