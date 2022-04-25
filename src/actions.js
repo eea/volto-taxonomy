@@ -3,6 +3,7 @@ import {
   UPDATE_TAXONOMY,
   GET_TAXONOMYSCHEMA,
   ADD_TAXONOMY,
+  DELETE_TAXONOMY,
 } from './constants';
 import { nestContent } from '@plone/volto/helpers';
 
@@ -26,6 +27,13 @@ export function addTaxonomy(data) {
   return {
     type: ADD_TAXONOMY,
     request: { op: 'post', path: '/@taxonomy', data },
+  };
+}
+
+export function deleteTaxonomy(data) {
+  return {
+    type: DELETE_TAXONOMY,
+    request: { op: 'del', path: `/@taxonomy/${data}` },
   };
 }
 

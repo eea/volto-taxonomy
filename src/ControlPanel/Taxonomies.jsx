@@ -1,8 +1,16 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { values } from 'lodash';
-import { Container, Header, Segment, Table, Button } from 'semantic-ui-react';
+import { values, map, includes, pull } from 'lodash';
+import {
+  Container,
+  Header,
+  Segment,
+  Table,
+  Button,
+  Confirm,
+  Checkbox,
+} from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { Icon, Toolbar } from '@plone/volto/components';
 import { getContent } from '@plone/volto/actions';
@@ -13,14 +21,18 @@ import { Portal } from 'react-portal';
 // import circleTopSVG from '@plone/volto/icons/circle-top.svg';
 import backSVG from '@plone/volto/icons/back.svg';
 import cicleAddSvg from '@plone/volto/icons/circle-plus.svg';
+import deleteSVG from '@plone/volto/icons/delete.svg';
 
 import AddTaxonomy from './AddTaxonomy';
+import { deleteTaxonomy } from '../actions';
 
 export default (props) => {
   const url = '/@taxonomy';
   const request = useSelector((state) => state.content.subrequests[url]);
   const dispatch = useDispatch();
   const [show, setShow] = React.useState(false);
+  const [selected, setSelected] = React.useState([]);
+  const [showDelete, setShowDelete] = React.useState(false);
 
   React.useEffect(() => {
     if (!request) {
@@ -28,43 +40,97 @@ export default (props) => {
     }
   }, [request, dispatch]);
 
+  const onDeleteOk = () => {
+    if (selected.length) {
+      for (let i = 0; i < selected.length; i++) {
+        dispatch(deleteTaxonomy(selected[i]));
+      }
+    }
+    setSelected([]);
+    setShowDelete(false);
+  };
+
+  const onDeleteCancel = () => {
+    setShowDelete(false);
+  };
+
+  const onChangeSelect = (id) => {
+    setSelected((prevState) =>
+      !includes(selected, id)
+        ? [...(prevState || []), id]
+        : [...pull(prevState, id)],
+    );
+  };
+
   return (
     <Container id="page-taxonomies" className="controlpanel-taxonomies">
       <Helmet title="Taxonomies" />
       {show && <AddTaxonomy {...props} setShow={setShow} />}
+      <Confirm
+        open={showDelete}
+        header={'Delete Taxonomies'}
+        content={
+          <div className="content">
+            <FormattedMessage
+              id="Do you really want to delete the following taxonomies?"
+              defaultMessage="Do you really want to delete the following taxonomies?"
+            />
+            <ul className="content">
+              {map(selected, (item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        }
+        onCancel={onDeleteCancel}
+        onConfirm={onDeleteOk}
+        size={null}
+      />
       <Segment.Group raised>
         <Segment className="primary">Taxonomy settings</Segment>
         <Segment>
           <Header as="h3">Existing taxonomies</Header>
         </Segment>
-
         <Segment>
-          <Table compact singleLine striped>
+          <Table>
             <Table.Header>
               <Table.Row>
+                <Table.HeaderCell>
+                  <FormattedMessage id="Select" defaultMessage="Select" />
+                </Table.HeaderCell>
                 <Table.HeaderCell>
                   <FormattedMessage id="Type" defaultMessage="Type" />
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <FormattedMessage id="Items" defaultMessage="Items" />
-                </Table.HeaderCell>
-                <Table.HeaderCell textAlign="right">
-                  <FormattedMessage id="Actions" defaultMessage="Actions" />
+                  <FormattedMessage id="Count" defaultMessage="Count" />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {values(request?.data).map((item) => (
-                <Table.Row key={item?.['name']}>
-                  <Table.Cell>
-                    <Link to={`${props.location.pathname}/${item?.['name']}`}>
-                      {item?.title}
-                    </Link>
-                  </Table.Cell>
-                  <Table.Cell>{item?.count?.['en-gb']}</Table.Cell>
-                  <Table.Cell textAlign="right"></Table.Cell>
-                </Table.Row>
-              ))}
+              {values(request?.data)
+                .filter((value) => !!value)
+                .map((item) => (
+                  <Table.Row key={item?.['name']}>
+                    <Table.Cell textAlign="left">
+                      <Checkbox
+                        checked={selected?.includes(item?.['name'])}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          onChangeSelect(item?.['name']);
+                        }}
+                        value={item?.['name']}
+                      />
+                    </Table.Cell>
+                    <Table.Cell textAlign="left">
+                      <Link to={`${props.location.pathname}/${item?.['name']}`}>
+                        {item?.title}
+                      </Link>
+                    </Table.Cell>
+                    <Table.Cell textAlign="right">
+                      {item?.count?.['en']}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
             </Table.Body>
           </Table>
         </Segment>
@@ -99,6 +165,20 @@ export default (props) => {
                     aria-label="Add Taxonomy"
                     title={'Add Taxonomy'}
                     size="40px"
+                  />
+                </Button>
+                <Button
+                  id="delete-taxonomy"
+                  aria-label={'delete-taxonomy'}
+                  onClick={() => {
+                    setShowDelete(true);
+                  }}
+                >
+                  <Icon
+                    name={deleteSVG}
+                    size="35px"
+                    color={selected.length > 0 ? '#e40166' : 'grey'}
+                    className="delete"
                   />
                 </Button>
               </>
