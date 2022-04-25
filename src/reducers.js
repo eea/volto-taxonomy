@@ -44,10 +44,7 @@ export function taxonomy(state = initialState, action) {
     case `${DELETE_TAXONOMY}_SUCCESS`:
       return {
         ...state,
-        data: {
-          ...state.data,
-          [action.url]: action.result,
-        },
+        data: [...(state.data || []), ...action.result],
         [getRequestKey(action.type)]: {
           loading: false,
           loaded: true,
@@ -59,12 +56,12 @@ export function taxonomy(state = initialState, action) {
         ...state,
         schema: {
           ...state.schema,
-          [action.url]: action.result,
-        },
-        [getRequestKey(action.type)]: {
-          loading: false,
-          loaded: true,
-          error: null,
+          schema: { ...action.result },
+          [getRequestKey(action.type)]: {
+            loading: false,
+            loaded: true,
+            error: null,
+          },
         },
       };
     case `${GET_TAXONOMY}_FAIL`:

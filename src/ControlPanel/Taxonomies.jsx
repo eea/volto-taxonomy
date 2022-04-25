@@ -13,32 +13,28 @@ import {
 } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { Icon, Toolbar } from '@plone/volto/components';
-import { getContent } from '@plone/volto/actions';
 import { Link } from 'react-router-dom';
 import { Portal } from 'react-portal';
 
-// import circleBottomSVG from '@plone/volto/icons/circle-bottom.svg';
-// import circleTopSVG from '@plone/volto/icons/circle-top.svg';
 import backSVG from '@plone/volto/icons/back.svg';
 import cicleAddSvg from '@plone/volto/icons/circle-plus.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 
 import AddTaxonomy from './AddTaxonomy';
-import { deleteTaxonomy } from '../actions';
+import { deleteTaxonomy, getTaxonomy } from '../actions';
 
 export default (props) => {
-  const url = '/@taxonomy';
-  const request = useSelector((state) => state.content.subrequests[url]);
+  const taxonomies = useSelector((state) => state.taxonomy?.data);
   const dispatch = useDispatch();
   const [show, setShow] = React.useState(false);
   const [selected, setSelected] = React.useState([]);
   const [showDelete, setShowDelete] = React.useState(false);
 
   React.useEffect(() => {
-    if (!request) {
-      dispatch(getContent(url, null, url));
+    if (!taxonomies) {
+      dispatch(getTaxonomy());
     }
-  }, [request, dispatch]);
+  }, [taxonomies, dispatch]);
 
   const onDeleteOk = () => {
     if (selected.length) {
@@ -107,30 +103,28 @@ export default (props) => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {values(request?.data)
-                .filter((value) => !!value)
-                .map((item) => (
-                  <Table.Row key={item?.['name']}>
-                    <Table.Cell textAlign="left">
-                      <Checkbox
-                        checked={selected?.includes(item?.['name'])}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          onChangeSelect(item?.['name']);
-                        }}
-                        value={item?.['name']}
-                      />
-                    </Table.Cell>
-                    <Table.Cell textAlign="left">
-                      <Link to={`${props.location.pathname}/${item?.['name']}`}>
-                        {item?.title}
-                      </Link>
-                    </Table.Cell>
-                    <Table.Cell textAlign="right">
-                      {item?.count?.['en']}
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
+              {taxonomies?.map((item) => (
+                <Table.Row key={item?.['name']}>
+                  <Table.Cell textAlign="left">
+                    <Checkbox
+                      checked={selected?.includes(item?.['name'])}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        onChangeSelect(item?.['name']);
+                      }}
+                      value={item?.['name']}
+                    />
+                  </Table.Cell>
+                  <Table.Cell textAlign="left">
+                    <Link to={`${props.location.pathname}/${item?.['name']}`}>
+                      {item?.title}
+                    </Link>
+                  </Table.Cell>
+                  <Table.Cell textAlign="right">
+                    {item?.count?.['en']}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
             </Table.Body>
           </Table>
         </Segment>

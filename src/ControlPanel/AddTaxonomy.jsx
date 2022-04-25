@@ -5,20 +5,20 @@ import { getTaxonomySchema, addTaxonomy } from '../actions';
 
 const AddTaxonomy = (props) => {
   const { setShow } = props;
-  const url = '/@taxonomySchema';
   const dispatch = useDispatch();
-  const [schema, loading, Taxonomy] = useSelector((state) => [
-    state.taxonomy?.schema?.[url],
-    state.taxonomy?.schema?.get?.loading,
-    state.taxonomy,
+  const [schema, loaded] = useSelector((state) => [
+    state.taxonomy?.schema?.schema,
+    state.taxonomy?.schema?.get?.loaded,
   ]);
   const [error, setError] = React.useState('');
 
   useEffect(() => {
-    dispatch(getTaxonomySchema(url));
-  }, []);
+    if (!schema) {
+      dispatch(getTaxonomySchema());
+    }
+  }, [schema, dispatch]);
 
-  return schema ? (
+  return loaded ? (
     <ModalForm
       open={true}
       className="modal"

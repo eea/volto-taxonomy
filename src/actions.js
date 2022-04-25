@@ -15,11 +15,10 @@ export function updateTaxonomy(url, content) {
   };
 }
 
-export function getTaxonomy(url) {
+export function getTaxonomy(name) {
   return {
-    url,
     type: GET_TAXONOMY,
-    request: { op: 'get', path: url },
+    request: { op: 'get', path: '/@taxonomy' },
   };
 }
 
@@ -39,11 +38,10 @@ export function deleteTaxonomy(data) {
 
 export function getTaxonomySchema(url) {
   return {
-    url,
     type: GET_TAXONOMYSCHEMA,
     request: {
       op: 'get',
-      path: url,
+      path: '/@taxonomySchema',
       headers: { Accept: 'application/json' },
     },
   };
