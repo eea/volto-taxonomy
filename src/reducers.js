@@ -1,4 +1,9 @@
-import { GET_TAXONOMY, UPDATE_TAXONOMY, GET_TAXONOMYSCHEMA } from './constants';
+import {
+  GET_TAXONOMY,
+  UPDATE_TAXONOMY,
+  GET_TAXONOMYSCHEMA,
+  ADD_TAXONOMY,
+} from './constants';
 
 const initialState = {};
 
@@ -10,6 +15,7 @@ export function taxonomy(state = initialState, action) {
   switch (action.type) {
     case `${GET_TAXONOMY}_PENDING`:
     case `${UPDATE_TAXONOMY}_PENDING`:
+    case `${ADD_TAXONOMY}_PENDING`:
       return {
         ...state,
         [getRequestKey(action.type)]: {
@@ -32,6 +38,7 @@ export function taxonomy(state = initialState, action) {
 
     case `${GET_TAXONOMY}_SUCCESS`:
     case `${UPDATE_TAXONOMY}_SUCCESS`:
+    case `${ADD_TAXONOMY}_SUCCESS`:
       return {
         ...state,
         data: {
@@ -59,6 +66,7 @@ export function taxonomy(state = initialState, action) {
       };
     case `${GET_TAXONOMY}_FAIL`:
     case `${UPDATE_TAXONOMY}_FAIL`:
+    case `${ADD_TAXONOMY}_FAIL`:
       return {
         ...state,
         [getRequestKey(action.type)]: {
