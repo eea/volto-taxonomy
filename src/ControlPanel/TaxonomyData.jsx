@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEqual } from 'lodash';
+import { isEmpty } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { Segment, Ref, Button, Table } from 'semantic-ui-react';
@@ -33,7 +33,7 @@ const TaxonomyData = (props) => {
     //   const action = getTaxonomy(id);
     //   dispatch(action);
     // }
-    if (taxonomy && !isEqual(taxonomy, state) && !dataLoaded.current) {
+    if (taxonomy) {
       dataLoaded.current = true;
       setState(fixData(taxonomy));
     }

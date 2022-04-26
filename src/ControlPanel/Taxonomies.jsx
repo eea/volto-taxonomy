@@ -116,7 +116,7 @@ export default (props) => {
                     />
                   </Table.Cell>
                   <Table.Cell textAlign="left">
-                    <Link to={`${props.location.pathname}/${item?.['name']}`}>
+                    <Link to={`${props.route.path}/${item?.['name']}`}>
                       {item?.title}
                     </Link>
                   </Table.Cell>
