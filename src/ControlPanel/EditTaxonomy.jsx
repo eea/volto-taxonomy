@@ -2,26 +2,23 @@ import React from 'react';
 import { Container, Header, Segment, Tab } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Icon, Toolbar } from '@plone/volto/components';
 import { Portal } from 'react-portal';
 import { Link } from 'react-router-dom';
-import { getContent } from '@plone/volto/actions';
 import backSVG from '@plone/volto/icons/back.svg';
-
+import { getTaxonomy } from '../actions';
 // import TaxonomySettings from './TaxonomySettings';
 import TaxonomyData from './TaxonomyData';
 
-export default (props) => {
+export default withRouter((props) => {
   const { id } = props.match.params;
-  const url = `/@taxonomy/${id}`;
   const dispatch = useDispatch();
-  const request = useSelector((state) => state.content.subrequests[url]);
+  const request = useSelector((state) => state.taxonomy?.taxonomy);
 
   React.useEffect(() => {
-    if (!request) {
-      dispatch(getContent(url, null, url));
-    }
-  }, [request, dispatch, url]);
+    dispatch(getTaxonomy(id));
+  }, []);
 
   return (
     <>
@@ -29,9 +26,7 @@ export default (props) => {
         <Helmet title="Taxonomies" />
         <Segment.Group raised>
           <Segment className="primary">
-            <Header as="h3">
-              Taxonomy: {request?.data?.title || 'loading...'}
-            </Header>
+            <Header as="h3">Taxonomy: {request?.title || 'loading...'}</Header>
           </Segment>
 
           <Segment>
@@ -50,7 +45,7 @@ export default (props) => {
                   menuItem: 'Edit taxonomy data',
                   render: () => (
                     <Tab.Pane>
-                      <TaxonomyData id={props?.match?.params?.id} />
+                      <TaxonomyData id={id} taxonomy={request} />
                     </Tab.Pane>
                   ),
                 },
@@ -91,4 +86,4 @@ export default (props) => {
       )}
     </>
   );
-};
+});

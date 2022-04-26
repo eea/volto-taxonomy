@@ -20,31 +20,29 @@ const fixData = (data) => {
 };
 
 const TaxonomyData = (props) => {
-  const { id } = props;
-  const url = `/@taxonomy/${id}`;
+  const { id, taxonomy } = props;
   const dispatch = useDispatch();
   const dataLoaded = React.useRef(false);
   const [state, setState] = React.useState({});
-  const taxonomy = useSelector((state) => state.taxonomy);
-  const request = taxonomy.get;
+  const taxonomyReq = useSelector((state) => state.taxonomy);
+  const request = taxonomyReq.get;
   const { loading, loaded, error } = request || {};
-  const data = taxonomy?.data?.[url];
 
   React.useEffect(() => {
-    if (id && !loaded && !loading) {
-      const action = getTaxonomy(url);
-      dispatch(action);
-    }
-    if (data && !isEqual(data, state) && !dataLoaded.current) {
+    // if (!taxonomy && !loaded && !loading) {
+    //   const action = getTaxonomy(id);
+    //   dispatch(action);
+    // }
+    if (taxonomy && !isEqual(taxonomy, state) && !dataLoaded.current) {
       dataLoaded.current = true;
-      setState(fixData(data));
+      setState(fixData(taxonomy));
     }
-  }, [dispatch, url, id, state, data, loading, loaded, error]);
+  }, [dispatch, id, state, taxonomy, loading, loaded, error]);
 
-  let langs = ['en-gb'];
+  let langs = ['en'];
   let childList = [];
   if (state.data) {
-    // langs = Object.keys(state?.data || {}).sort();
+    langs = Object.keys(state?.data || {}).sort();
     childList = Array(state?.data?.[langs[0]]?.length)
       .fill(0)
       .map((_, i) => [i.toString(), i.toString()]);
@@ -142,7 +140,7 @@ const TaxonomyData = (props) => {
         <Button
           floated="right"
           onClick={() => {
-            dispatch(updateTaxonomy(url, state));
+            dispatch(updateTaxonomy(id, state));
           }}
         >
           Save

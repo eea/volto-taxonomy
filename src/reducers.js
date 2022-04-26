@@ -3,6 +3,7 @@ import {
   UPDATE_TAXONOMY,
   GET_TAXONOMYSCHEMA,
   ADD_TAXONOMY,
+  LIST_TAXONOMIES,
   DELETE_TAXONOMY,
 } from './constants';
 
@@ -15,6 +16,7 @@ function getRequestKey(actionType) {
 export function taxonomy(state = initialState, action) {
   switch (action.type) {
     case `${GET_TAXONOMY}_PENDING`:
+    case `${LIST_TAXONOMIES}_PENDING`:
     case `${UPDATE_TAXONOMY}_PENDING`:
     case `${ADD_TAXONOMY}_PENDING`:
     case `${DELETE_TAXONOMY}_PENDING`:
@@ -38,13 +40,11 @@ export function taxonomy(state = initialState, action) {
         },
       };
 
-    case `${GET_TAXONOMY}_SUCCESS`:
     case `${UPDATE_TAXONOMY}_SUCCESS`:
     case `${ADD_TAXONOMY}_SUCCESS`:
     case `${DELETE_TAXONOMY}_SUCCESS`:
       return {
         ...state,
-        data: [...(state.data || []), ...action.result],
         [getRequestKey(action.type)]: {
           loading: false,
           loaded: true,
@@ -64,12 +64,30 @@ export function taxonomy(state = initialState, action) {
           },
         },
       };
-    case `${GET_TAXONOMY}_FAIL`:
-    case `${UPDATE_TAXONOMY}_FAIL`:
-    case `${ADD_TAXONOMY}_FAIL`:
-    case `${DELETE_TAXONOMY}_FAIL`:
+    case `${GET_TAXONOMY}_SUCCESS`:
       return {
         ...state,
+        taxonomy: action.result,
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: true,
+          error: null,
+        },
+      };
+    case `${LIST_TAXONOMIES}_SUCCESS`:
+      return {
+        ...state,
+        data: action.result,
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: true,
+          error: null,
+        },
+      };
+    case `${LIST_TAXONOMIES}_FAIL`:
+      return {
+        ...state,
+        data: [],
         [getRequestKey(action.type)]: {
           loading: false,
           loaded: false,
@@ -79,12 +97,33 @@ export function taxonomy(state = initialState, action) {
     case `${GET_TAXONOMYSCHEMA}_FAIL`:
       return {
         ...state,
-        schema: {
-          [getRequestKey(action.type)]: {
-            loading: false,
-            loaded: false,
-            error: action.error,
-          },
+        schema: {},
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: false,
+          error: action.error,
+        },
+      };
+
+    case `${GET_TAXONOMY}_FAIL`:
+      return {
+        ...state,
+        taxonomy: {},
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: false,
+          error: action.error,
+        },
+      };
+    case `${UPDATE_TAXONOMY}_FAIL`:
+    case `${ADD_TAXONOMY}_FAIL`:
+    case `${DELETE_TAXONOMY}_FAIL`:
+      return {
+        ...state,
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: false,
+          error: action.error,
         },
       };
 

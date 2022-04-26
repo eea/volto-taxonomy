@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { values, map, includes, pull } from 'lodash';
+import { map, includes, pull } from 'lodash';
 import {
   Container,
   Header,
@@ -21,7 +21,7 @@ import cicleAddSvg from '@plone/volto/icons/circle-plus.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 
 import AddTaxonomy from './AddTaxonomy';
-import { deleteTaxonomy, getTaxonomy } from '../actions';
+import { deleteTaxonomy, listTaxonomies } from '../actions';
 
 export default (props) => {
   const taxonomies = useSelector((state) => state.taxonomy?.data);
@@ -32,7 +32,7 @@ export default (props) => {
 
   React.useEffect(() => {
     if (!taxonomies) {
-      dispatch(getTaxonomy());
+      dispatch(listTaxonomies());
     }
   }, [taxonomies, dispatch]);
 
@@ -167,6 +167,7 @@ export default (props) => {
                   onClick={() => {
                     setShowDelete(true);
                   }}
+                  disabled={selected.length > 0 ? false : true}
                 >
                   <Icon
                     name={deleteSVG}
