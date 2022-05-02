@@ -8,11 +8,14 @@ import {
 } from './constants';
 import { nestContent } from '@plone/volto/helpers';
 
-export function updateTaxonomy(url, content) {
+export function updateTaxonomy(name, content) {
   return {
-    url,
     type: UPDATE_TAXONOMY,
-    request: { op: 'patch', path: url, data: nestContent(content) },
+    request: {
+      op: 'patch',
+      path: name ? `/@taxonomy/${name}` : '/@taxonomy',
+      data: nestContent(content),
+    },
   };
 }
 

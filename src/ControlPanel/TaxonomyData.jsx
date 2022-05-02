@@ -128,10 +128,19 @@ const TaxonomyData = (props) => {
         <Button
           onClick={() => {
             const newState = { ...state };
-            Object.keys(state.data).forEach((lang) => {
-              newState.data[lang].push({ token: uuid(), title: '...' });
-              newState.order[lang].push(newState.order[lang]?.length);
-            });
+            //todo: Add support for nested content tree
+            if (isEmpty(newState.data)) {
+              newState.data['en'] = [{ token: uuid(), title: '...' }];
+              newState.order['en'] = [0];
+              newState.count['en'] = newState.data['en']?.length;
+            } else {
+              Object.keys(state.data).forEach((lang) => {
+                if (newState.data[lang])
+                  newState.data[lang].push({ token: uuid(), title: '...' });
+                newState.order[lang].push(newState.order[lang]?.length);
+              });
+            }
+
             setState(newState);
           }}
         >
