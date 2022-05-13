@@ -10,6 +10,8 @@ const AddTaxonomy = (props) => {
     state.taxonomy?.schema?.schema,
     state.taxonomy?.schema?.get?.loaded,
   ]);
+  const [loading] = useSelector((state) => [state?.taxonomy?.add?.loading]);
+
   const [error, setError] = React.useState('');
 
   useEffect(() => {
@@ -30,7 +32,7 @@ const AddTaxonomy = (props) => {
       submitError={error.message}
       onCancel={() => setShow(false)}
       title={'Add Taxonomy'}
-      loading={false}
+      loading={loading}
       schema={schema}
     />
   ) : null;

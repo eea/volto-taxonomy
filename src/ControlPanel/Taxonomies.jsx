@@ -25,16 +25,15 @@ import { deleteTaxonomy, listTaxonomies } from '../actions';
 
 export default (props) => {
   const taxonomies = useSelector((state) => state.taxonomy?.data);
+  // const [taxonomies, setTaxonomies] = React.useState(taxonomyList);
   const dispatch = useDispatch();
   const [show, setShow] = React.useState(false);
   const [selected, setSelected] = React.useState([]);
   const [showDelete, setShowDelete] = React.useState(false);
 
   React.useEffect(() => {
-    if (!taxonomies) {
-      dispatch(listTaxonomies());
-    }
-  }, [taxonomies, dispatch]);
+    dispatch(listTaxonomies());
+  }, []);
 
   const onDeleteOk = () => {
     if (selected.length) {

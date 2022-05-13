@@ -42,15 +42,26 @@ export function taxonomy(state = initialState, action) {
 
     case `${UPDATE_TAXONOMY}_SUCCESS`:
     case `${ADD_TAXONOMY}_SUCCESS`:
-    case `${DELETE_TAXONOMY}_SUCCESS`:
       return {
         ...state,
+        data: [...state.data, action.result],
         [getRequestKey(action.type)]: {
           loading: false,
           loaded: true,
           error: null,
         },
       };
+    case `${DELETE_TAXONOMY}_SUCCESS`:
+      return {
+        ...state,
+        data: action.result,
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: true,
+          error: null,
+        },
+      };
+
     case `${GET_TAXONOMYSCHEMA}_SUCCESS`:
       return {
         ...state,
