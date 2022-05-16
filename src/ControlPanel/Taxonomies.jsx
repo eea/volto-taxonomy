@@ -102,28 +102,31 @@ export default (props) => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {taxonomies?.map((item) => (
-                <Table.Row key={item?.['name']}>
-                  <Table.Cell textAlign="left">
-                    <Checkbox
-                      checked={selected?.includes(item?.['name'])}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        onChangeSelect(item?.['name']);
-                      }}
-                      value={item?.['name']}
-                    />
-                  </Table.Cell>
-                  <Table.Cell textAlign="left">
-                    <Link to={`${props.route.path}/${item?.['name']}`}>
-                      {item?.title}
-                    </Link>
-                  </Table.Cell>
-                  <Table.Cell textAlign="right">
-                    {item?.count?.['en']}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+              {taxonomies?.map(
+                (item) =>
+                  item && (
+                    <Table.Row key={item?.['name']}>
+                      <Table.Cell textAlign="left">
+                        <Checkbox
+                          checked={selected?.includes(item?.['name'])}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            onChangeSelect(item?.['name']);
+                          }}
+                          value={item?.['name']}
+                        />
+                      </Table.Cell>
+                      <Table.Cell textAlign="left">
+                        <Link to={`${props.route.path}/${item?.['name']}`}>
+                          {item?.title}
+                        </Link>
+                      </Table.Cell>
+                      <Table.Cell textAlign="right">
+                        {item?.count?.['en']}
+                      </Table.Cell>
+                    </Table.Row>
+                  ),
+              )}
             </Table.Body>
           </Table>
         </Segment>

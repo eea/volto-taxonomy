@@ -8,17 +8,95 @@ import { Portal } from 'react-portal';
 import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
 import { getTaxonomy } from '../actions';
+import SortableTree, {
+  addNodeUnderParent,
+  removeNodeAtPath,
+} from 'react-sortable-tree';
 // import TaxonomySettings from './TaxonomySettings';
 import TaxonomyData from './TaxonomyData';
+
+export function getTreeFromFlatData(
+  flatData,
+  getKey = (node) => node.id,
+  getParentKey = (node) => node.parentId,
+  rootKey = '0',
+) {
+  if (!flatData) {
+    return [];
+  }
+
+  const childrenToParents = {};
+  flatData.forEach((child, index) => {
+    const parentKey = getParentKey(child);
+
+    if (parentKey in childrenToParents) {
+      childrenToParents[parentKey].push(child);
+    } else {
+      childrenToParents[parentKey] = [child];
+    }
+  });
+
+  if (!(rootKey in childrenToParents)) {
+    return [];
+  }
+
+  const keysArray = Object.keys(childrenToParents);
+
+  for (let i = 1; i < keysArray.length; i++) {
+    if (keysArray[i].includes(keysArray[i - 1])) {
+      if (childrenToParents[keysArray[i - 1]]) {
+        childrenToParents[keysArray[i - 1]][0].children =
+          childrenToParents[keysArray[i]];
+      }
+    }
+  }
+
+  return Object.values(childrenToParents).flat();
+
+  // const trav = (parent) => {
+  //   const parentKey = getKey(parent);
+  //   if (parentKey in childrenToParents) {
+  //     return {
+  //       ...parent,
+  //       children: childrenToParents[parentKey].map((child) => trav(child)),
+  //     };
+  //   }
+
+  //   return { ...parent };
+  // };
+
+  // return childrenToParents[rootKey].map((child) => trav(child));
+}
 
 export default withRouter((props) => {
   const { id } = props.match.params;
   const dispatch = useDispatch();
   const request = useSelector((state) => state.taxonomy?.taxonomy);
 
+  const [treeData, setTreeData] = React.useState([
+    { title: 'Chicken', children: [{ title: 'Egg' }] },
+    { title: 'Fish', children: [{ title: 'fingerline' }] },
+  ]);
+
+  React.useEffect(() => {
+    setTreeData(
+      getTreeFromFlatData(
+        request?.data?.['en'],
+        (node) => node.title,
+        (node) => node.title,
+        request?.data?.['en'][0]?.title,
+      ),
+    );
+  }, [request]);
+  const getNodeKey = ({ treeIndex }) => treeIndex;
+
   React.useEffect(() => {
     dispatch(getTaxonomy(id));
   }, [id]);
+
+  const onChange = (data) => {
+    setTreeData(data);
+  };
 
   return (
     <>
@@ -45,7 +123,51 @@ export default withRouter((props) => {
                   menuItem: 'Edit taxonomy data',
                   render: () => (
                     <Tab.Pane>
-                      <TaxonomyData id={id} taxonomy={request} />
+                      {/* <TaxonomyData id={id} taxonomy={request} /> */}
+                      <div>
+                        <SortableTree
+                          treeData={treeData}
+                          onChange={onChange}
+                          isVirtualized={false}
+                          generateNodeProps={({ node, path }) => ({
+                            buttons: [
+                              <button
+                                onClick={() =>
+                                  setTreeData((state) => ({
+                                    treeData: addNodeUnderParent({
+                                      treeData: state.treeData,
+                                      parentKey: path[path.length - 1],
+                                      expandParent: true,
+                                      getNodeKey,
+                                      newNode: {
+                                        title: `${
+                                          node.title.split(' ')[0]
+                                        }sson`,
+                                      },
+                                      addAsFirstChild: state.addAsFirstChild,
+                                    }).treeData,
+                                  }))
+                                }
+                              >
+                                Add Child
+                              </button>,
+                              <button
+                                onClick={() =>
+                                  setTreeData((state) => ({
+                                    treeData: removeNodeAtPath({
+                                      treeData: state.treeData,
+                                      path,
+                                      getNodeKey,
+                                    }),
+                                  }))
+                                }
+                              >
+                                Remove
+                              </button>,
+                            ],
+                          })}
+                        />
+                      </div>
                     </Tab.Pane>
                   ),
                 },
