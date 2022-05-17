@@ -1,5 +1,12 @@
 import React from 'react';
-import { Container, Header, Segment, Tab } from 'semantic-ui-react';
+import {
+  Container,
+  Header,
+  Segment,
+  Tab,
+  Button,
+  Grid,
+} from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -7,10 +14,12 @@ import { Icon, Toolbar } from '@plone/volto/components';
 import { Portal } from 'react-portal';
 import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
+import saveSVG from '@plone/volto/icons/save.svg';
 import { getTaxonomy } from '../actions';
 import SortableTree, {
   addNodeUnderParent,
   removeNodeAtPath,
+  changeNodeAtPath,
 } from 'react-sortable-tree';
 // import TaxonomySettings from './TaxonomySettings';
 import TaxonomyData from './TaxonomyData';
@@ -74,20 +83,20 @@ export default withRouter((props) => {
   const request = useSelector((state) => state.taxonomy?.taxonomy);
 
   const [treeData, setTreeData] = React.useState([
-    { title: 'Chicken', children: [{ title: 'Egg' }] },
-    { title: 'Fish', children: [{ title: 'fingerline' }] },
+    { title: '', children: [{ title: '' }] },
   ]);
 
-  React.useEffect(() => {
-    setTreeData(
-      getTreeFromFlatData(
-        request?.data?.['en'],
-        (node) => node.title,
-        (node) => node.title,
-        request?.data?.['en'][0]?.title,
-      ),
-    );
-  }, [request]);
+  // React.useEffect(() => {
+  //   setTreeData(
+  //     getTreeFromFlatData(
+  //       request?.data?.['en'],
+  //       (node) => node.title,
+  //       (node) => node.title,
+  //       request?.data?.['en'][0]?.title,
+  //     ),
+  //   );
+  // }, [request]);
+
   const getNodeKey = ({ treeIndex }) => treeIndex;
 
   React.useEffect(() => {
@@ -132,41 +141,69 @@ export default withRouter((props) => {
                           generateNodeProps={({ node, path }) => ({
                             buttons: [
                               <button
-                                onClick={() =>
-                                  setTreeData((state) => ({
-                                    treeData: addNodeUnderParent({
-                                      treeData: state.treeData,
-                                      parentKey: path[path.length - 1],
-                                      expandParent: true,
-                                      getNodeKey,
-                                      newNode: {
-                                        title: `${
-                                          node.title.split(' ')[0]
-                                        }sson`,
-                                      },
-                                      addAsFirstChild: state.addAsFirstChild,
-                                    }).treeData,
-                                  }))
-                                }
+                                onClick={() => {
+                                  const insertNode = addNodeUnderParent({
+                                    treeData,
+                                    parentKey: path[path.length - 1],
+                                    expandParent: true,
+                                    getNodeKey,
+                                    newNode: {
+                                      title: `${node.title}-`,
+                                    },
+                                  });
+                                  setTreeData(insertNode.treeData);
+                                }}
                               >
                                 Add Child
                               </button>,
                               <button
-                                onClick={() =>
-                                  setTreeData((state) => ({
-                                    treeData: removeNodeAtPath({
-                                      treeData: state.treeData,
-                                      path,
-                                      getNodeKey,
-                                    }),
-                                  }))
-                                }
+                                onClick={() => {
+                                  const removedNode = removeNodeAtPath({
+                                    treeData,
+                                    path,
+                                    getNodeKey,
+                                  });
+                                  setTreeData(removedNode);
+                                }}
                               >
                                 Remove
                               </button>,
                             ],
+                            title: (
+                              <input
+                                style={{ fontSize: '1.1rem' }}
+                                value={node.name}
+                                placeholder="Title"
+                                onChange={(event) => {
+                                  const name = event.target.value;
+
+                                  const newNode = changeNodeAtPath({
+                                    treeData,
+                                    path,
+                                    getNodeKey,
+                                    newNode: {
+                                      ...node,
+                                      name,
+                                    },
+                                  });
+                                  setTreeData(newNode);
+                                }}
+                              />
+                            ),
                           })}
                         />
+
+                        <button
+                          onClick={() => {
+                            setTreeData((state) =>
+                              state.concat({
+                                title: `demo`,
+                              }),
+                            );
+                          }}
+                        >
+                          Add root node
+                        </button>
                       </div>
                     </Tab.Pane>
                   ),
@@ -201,6 +238,21 @@ export default withRouter((props) => {
                     title="Back"
                   />
                 </Link>
+                <Button
+                  id="save-taxonomy-data"
+                  aria-label={'Save taxonomy'}
+                  className="save"
+                  onClick={() => {}}
+                >
+                  <Icon
+                    name={saveSVG}
+                    className="circled"
+                    color="#007eb1"
+                    aria-label="Save Taxonomy"
+                    title={'Save Taxonomy'}
+                    size="30px"
+                  />
+                </Button>
               </>
             }
           />
