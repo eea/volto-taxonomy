@@ -10,12 +10,14 @@ import {
 import { Helmet } from '@plone/volto/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
 import { Icon, Toolbar } from '@plone/volto/components';
 import { Portal } from 'react-portal';
 import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
-import { getTaxonomy } from '../actions';
+import { getTaxonomy, updateTaxonomy } from '../actions';
+
 import SortableTree, {
   addNodeUnderParent,
   removeNodeAtPath,
@@ -83,7 +85,7 @@ export default withRouter((props) => {
   const request = useSelector((state) => state.taxonomy?.taxonomy);
 
   const [treeData, setTreeData] = React.useState([
-    { title: '', children: [{ title: '' }] },
+    { title: '', key: uuid(), children: [{ title: '', key: uuid() }] },
   ]);
 
   // React.useEffect(() => {
@@ -148,7 +150,8 @@ export default withRouter((props) => {
                                     expandParent: true,
                                     getNodeKey,
                                     newNode: {
-                                      title: `${node.title}-`,
+                                      title: ``,
+                                      key: uuid(),
                                     },
                                   });
                                   setTreeData(insertNode.treeData);
@@ -172,7 +175,7 @@ export default withRouter((props) => {
                             title: (
                               <input
                                 style={{ fontSize: '1.1rem' }}
-                                value={node.name}
+                                value={node.title}
                                 placeholder="Title"
                                 onChange={(event) => {
                                   const name = event.target.value;
@@ -183,7 +186,28 @@ export default withRouter((props) => {
                                     getNodeKey,
                                     newNode: {
                                       ...node,
-                                      name,
+                                      title: name,
+                                    },
+                                  });
+                                  setTreeData(newNode);
+                                }}
+                              />
+                            ),
+                            subtitle: (
+                              <input
+                                style={{ fontSize: '1.1rem' }}
+                                value={node.key}
+                                placeholder="id"
+                                onChange={(event) => {
+                                  const id = event.target.value;
+
+                                  const newNode = changeNodeAtPath({
+                                    treeData,
+                                    path,
+                                    getNodeKey,
+                                    newNode: {
+                                      ...node,
+                                      key: id,
                                     },
                                   });
                                   setTreeData(newNode);
@@ -192,12 +216,12 @@ export default withRouter((props) => {
                             ),
                           })}
                         />
-
                         <button
                           onClick={() => {
                             setTreeData((state) =>
                               state.concat({
-                                title: `demo`,
+                                title: '',
+                                key: uuid(),
                               }),
                             );
                           }}
@@ -242,7 +266,9 @@ export default withRouter((props) => {
                   id="save-taxonomy-data"
                   aria-label={'Save taxonomy'}
                   className="save"
-                  onClick={() => {}}
+                  onClick={() => {
+                    dispatch(updateTaxonomy(id, treeData));
+                  }}
                 >
                   <Icon
                     name={saveSVG}
