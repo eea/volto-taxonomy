@@ -8,14 +8,18 @@ import {
   Grid,
 } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { Icon, Toolbar } from '@plone/volto/components';
+import { Icon, Toolbar, Toast } from '@plone/volto/components';
 import { Portal } from 'react-portal';
+import { defineMessages, useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
+import deleteSVG from '@plone/volto/icons/delete.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
+import navSVG from '@plone/volto/icons/nav.svg';
 import { getTaxonomy, updateTaxonomy } from '../actions';
 
 import SortableTree, {
@@ -26,78 +30,34 @@ import SortableTree, {
 // import TaxonomySettings from './TaxonomySettings';
 import TaxonomyData from './TaxonomyData';
 
-export function getTreeFromFlatData(
-  flatData,
-  getKey = (node) => node.id,
-  getParentKey = (node) => node.parentId,
-  rootKey = '0',
-) {
-  if (!flatData) {
-    return [];
-  }
-
-  const childrenToParents = {};
-  flatData.forEach((child, index) => {
-    const parentKey = getParentKey(child);
-
-    if (parentKey in childrenToParents) {
-      childrenToParents[parentKey].push(child);
-    } else {
-      childrenToParents[parentKey] = [child];
-    }
-  });
-
-  if (!(rootKey in childrenToParents)) {
-    return [];
-  }
-
-  const keysArray = Object.keys(childrenToParents);
-
-  for (let i = 1; i < keysArray.length; i++) {
-    if (keysArray[i].includes(keysArray[i - 1])) {
-      if (childrenToParents[keysArray[i - 1]]) {
-        childrenToParents[keysArray[i - 1]][0].children =
-          childrenToParents[keysArray[i]];
-      }
-    }
-  }
-
-  return Object.values(childrenToParents).flat();
-
-  // const trav = (parent) => {
-  //   const parentKey = getKey(parent);
-  //   if (parentKey in childrenToParents) {
-  //     return {
-  //       ...parent,
-  //       children: childrenToParents[parentKey].map((child) => trav(child)),
-  //     };
-  //   }
-
-  //   return { ...parent };
-  // };
-
-  // return childrenToParents[rootKey].map((child) => trav(child));
-}
+const messages = defineMessages({
+  saved: {
+    id: 'Changes saved',
+    defaultMessage: 'Changes saved',
+  },
+  success: {
+    id: 'Success',
+    defaultMessage: 'Success',
+  },
+  error: {
+    id: 'Error',
+    defaultMessage: 'Error',
+  },
+});
 
 export default withRouter((props) => {
   const { id } = props.match.params;
   const dispatch = useDispatch();
   const request = useSelector((state) => state.taxonomy?.taxonomy);
+  const intl = useIntl();
 
-  const [treeData, setTreeData] = React.useState([
-    { title: '', key: uuid(), children: [{ title: '', key: uuid() }] },
-  ]);
+  //const languages = request && Object.keys(request?.translations);
 
-  // React.useEffect(() => {
-  //   setTreeData(
-  //     getTreeFromFlatData(
-  //       request?.data?.['en'],
-  //       (node) => node.title,
-  //       (node) => node.title,
-  //       request?.data?.['en'][0]?.title,
-  //     ),
-  //   );
-  // }, [request]);
+  const [treeData, setTreeData] = React.useState(null);
+
+  React.useEffect(() => {
+    if (request) setTreeData(request?.tree);
+  }, [request]);
 
   const getNodeKey = ({ treeIndex }) => treeIndex;
 
@@ -118,131 +78,133 @@ export default withRouter((props) => {
             <Header as="h3">Taxonomy: {request?.title || 'loading...'}</Header>
           </Segment>
 
-          <Segment>
-            <Tab
-              menu={{
-                secondary: true,
-                pointing: true,
-                attached: true,
-                tabular: true,
-                className: 'formtabs',
-              }}
-              grid={{ paneWidth: 9, tabWidth: 3, stackable: true }}
-              onTabChange={() => {}}
-              panes={[
-                {
-                  menuItem: 'Edit taxonomy data',
-                  render: () => (
-                    <Tab.Pane>
-                      {/* <TaxonomyData id={id} taxonomy={request} /> */}
-                      <div>
-                        <SortableTree
-                          treeData={treeData}
-                          onChange={onChange}
-                          isVirtualized={false}
-                          generateNodeProps={({ node, path }) => ({
-                            buttons: [
-                              <button
-                                onClick={() => {
-                                  const insertNode = addNodeUnderParent({
-                                    treeData,
-                                    parentKey: path[path.length - 1],
-                                    expandParent: true,
-                                    getNodeKey,
-                                    newNode: {
-                                      title: ``,
-                                      key: uuid(),
-                                    },
-                                  });
-                                  setTreeData(insertNode.treeData);
-                                }}
-                              >
-                                Add Child
-                              </button>,
-                              <button
-                                onClick={() => {
-                                  const removedNode = removeNodeAtPath({
-                                    treeData,
-                                    path,
-                                    getNodeKey,
-                                  });
-                                  setTreeData(removedNode);
-                                }}
-                              >
-                                Remove
-                              </button>,
-                            ],
-                            title: (
-                              <input
-                                style={{ fontSize: '1.1rem' }}
-                                value={node.title}
-                                placeholder="Title"
-                                onChange={(event) => {
-                                  const name = event.target.value;
+          {treeData ? (
+            <Segment>
+              <Tab
+                menu={{
+                  secondary: true,
+                  pointing: true,
+                  attached: true,
+                  tabular: true,
+                  className: 'formtabs',
+                }}
+                grid={{ paneWidth: 9, tabWidth: 3, stackable: true }}
+                onTabChange={() => {}}
+                panes={[
+                  {
+                    menuItem: 'Edit taxonomy data',
+                    render: () => (
+                      <Tab.Pane>
+                        {/* <TaxonomyData id={id} taxonomy={request} /> */}
+                        <div>
+                          <SortableTree
+                            treeData={treeData}
+                            onChange={onChange}
+                            isVirtualized={false}
+                            generateNodeProps={({ node, path }) => ({
+                              buttons: [
+                                <button
+                                  onClick={() => {
+                                    const insertNode = addNodeUnderParent({
+                                      treeData,
+                                      parentKey: path[path.length - 1],
+                                      expandParent: true,
+                                      getNodeKey,
+                                      newNode: {
+                                        title: ``,
+                                        key: uuid(),
+                                      },
+                                    });
+                                    setTreeData(insertNode.treeData);
+                                  }}
+                                >
+                                  <Icon name={navSVG} size="24px" />
+                                </button>,
+                                <button
+                                  onClick={() => {
+                                    const removedNode = removeNodeAtPath({
+                                      treeData,
+                                      path,
+                                      getNodeKey,
+                                    });
+                                    setTreeData(removedNode);
+                                  }}
+                                >
+                                  <Icon name={deleteSVG} size="24px" />
+                                </button>,
+                              ],
+                              title: (
+                                <input
+                                  style={{ fontSize: '1.1rem' }}
+                                  value={node.title}
+                                  placeholder="Title"
+                                  onChange={(event) => {
+                                    const name = event.target.value;
 
-                                  const newNode = changeNodeAtPath({
-                                    treeData,
-                                    path,
-                                    getNodeKey,
-                                    newNode: {
-                                      ...node,
-                                      title: name,
-                                    },
-                                  });
-                                  setTreeData(newNode);
-                                }}
-                              />
-                            ),
-                            subtitle: (
-                              <input
-                                style={{ fontSize: '1.1rem' }}
-                                value={node.key}
-                                placeholder="id"
-                                onChange={(event) => {
-                                  const id = event.target.value;
+                                    const newNode = changeNodeAtPath({
+                                      treeData,
+                                      path,
+                                      getNodeKey,
+                                      newNode: {
+                                        ...node,
+                                        title: name,
+                                      },
+                                    });
+                                    setTreeData(newNode);
+                                  }}
+                                />
+                              ),
+                              subtitle: (
+                                <input
+                                  style={{ fontSize: '1.1rem' }}
+                                  value={node.key}
+                                  placeholder="id"
+                                  onChange={(event) => {
+                                    const id = event.target.value;
 
-                                  const newNode = changeNodeAtPath({
-                                    treeData,
-                                    path,
-                                    getNodeKey,
-                                    newNode: {
-                                      ...node,
-                                      key: id,
-                                    },
-                                  });
-                                  setTreeData(newNode);
-                                }}
-                              />
-                            ),
-                          })}
-                        />
-                        <button
-                          onClick={() => {
-                            setTreeData((state) =>
-                              state.concat({
-                                title: '',
-                                key: uuid(),
-                              }),
-                            );
-                          }}
-                        >
-                          Add root node
-                        </button>
-                      </div>
-                    </Tab.Pane>
-                  ),
-                },
-                // {
-                //   menuItem: 'Edit taxonomy',
-                //   render: () => (
-                //     <Tab.Pane>
-                //       <TaxonomySettings />
-                //     </Tab.Pane>
-                //   ),
-                // },
-              ]}
-            />
-          </Segment>
+                                    const newNode = changeNodeAtPath({
+                                      treeData,
+                                      path,
+                                      getNodeKey,
+                                      newNode: {
+                                        ...node,
+                                        key: id,
+                                      },
+                                    });
+                                    setTreeData(newNode);
+                                  }}
+                                />
+                              ),
+                            })}
+                          />
+                          <button
+                            onClick={() => {
+                              setTreeData((state) =>
+                                state.concat({
+                                  title: '',
+                                  key: uuid(),
+                                }),
+                              );
+                            }}
+                          >
+                            Add root node
+                          </button>
+                        </div>
+                      </Tab.Pane>
+                    ),
+                  },
+                  // {
+                  //   menuItem: 'Edit taxonomy',
+                  //   render: () => (
+                  //     <Tab.Pane>
+                  //       <TaxonomySettings />
+                  //     </Tab.Pane>
+                  //   ),
+                  // },
+                ]}
+              />
+            </Segment>
+          ) : null}
         </Segment.Group>
       </Container>
 
@@ -267,7 +229,32 @@ export default withRouter((props) => {
                   aria-label={'Save taxonomy'}
                   className="save"
                   onClick={() => {
-                    dispatch(updateTaxonomy(id, treeData));
+                    dispatch(
+                      updateTaxonomy(id, {
+                        name: request?.name,
+                        title: request?.title,
+                        // languages,
+                        tree: treeData,
+                      }),
+                    )
+                      .then(() => {
+                        toast.success(
+                          <Toast
+                            success
+                            title={intl.formatMessage(messages.success)}
+                            content={intl.formatMessage(messages.saved)}
+                          />,
+                        );
+                      })
+                      .catch((e) => {
+                        toast.error(
+                          <Toast
+                            error
+                            title={intl.formatMessage(messages.error)}
+                            content={e.message}
+                          />,
+                        );
+                      });
                   }}
                 >
                   <Icon
