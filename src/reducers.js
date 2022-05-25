@@ -40,7 +40,6 @@ export function taxonomy(state = initialState, action) {
         },
       };
 
-    case `${UPDATE_TAXONOMY}_SUCCESS`:
     case `${ADD_TAXONOMY}_SUCCESS`:
       return {
         ...state,
@@ -51,6 +50,17 @@ export function taxonomy(state = initialState, action) {
           error: null,
         },
       };
+
+    case `${UPDATE_TAXONOMY}_SUCCESS`:
+      return {
+        ...state,
+        [getRequestKey(action.type)]: {
+          loading: false,
+          loaded: true,
+          error: null,
+        },
+      };
+
     case `${DELETE_TAXONOMY}_SUCCESS`:
       return {
         ...state,

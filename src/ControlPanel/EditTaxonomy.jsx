@@ -18,6 +18,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
+import addDocumentSVG from '@plone/volto/icons/add-document.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
 import navSVG from '@plone/volto/icons/nav.svg';
 import { getTaxonomy, updateTaxonomy } from '../actions';
@@ -51,7 +52,7 @@ export default withRouter((props) => {
   const request = useSelector((state) => state.taxonomy?.taxonomy);
   const intl = useIntl();
 
-  //const languages = request && Object.keys(request?.translations);
+  const languages = ['en'];
 
   const [treeData, setTreeData] = React.useState(null);
 
@@ -187,7 +188,7 @@ export default withRouter((props) => {
                               );
                             }}
                           >
-                            Add root node
+                            <Icon name={addDocumentSVG} size="24px" />
                           </button>
                         </div>
                       </Tab.Pane>
@@ -233,7 +234,7 @@ export default withRouter((props) => {
                       updateTaxonomy(id, {
                         name: request?.name,
                         title: request?.title,
-                        // languages,
+                        languages,
                         tree: treeData,
                       }),
                     )
