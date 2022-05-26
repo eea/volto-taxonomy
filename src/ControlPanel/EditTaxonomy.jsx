@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Container,
-  Header,
-  Segment,
-  Tab,
-  Button,
-  Grid,
-} from 'semantic-ui-react';
+import { Container, Header, Segment, Tab, Button } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';

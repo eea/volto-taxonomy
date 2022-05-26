@@ -12,7 +12,9 @@ import {
   Checkbox,
 } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
-import { Icon, Toolbar } from '@plone/volto/components';
+import { toast } from 'react-toastify';
+import { defineMessages, useIntl } from 'react-intl';
+import { Icon, Toolbar, Toast } from '@plone/volto/components';
 import { Link } from 'react-router-dom';
 import { Portal } from 'react-portal';
 
@@ -23,7 +25,23 @@ import deleteSVG from '@plone/volto/icons/delete.svg';
 import AddTaxonomy from './AddTaxonomy';
 import { deleteTaxonomy, listTaxonomies } from '../actions';
 
+const messages = defineMessages({
+  delete: {
+    id: 'Taxonomies Deleted',
+    defaultMessage: 'Taxonomies Deleted',
+  },
+  success: {
+    id: 'Success',
+    defaultMessage: 'Success',
+  },
+  error: {
+    id: 'Error',
+    defaultMessage: 'Error',
+  },
+});
+
 export default (props) => {
+  const intl = useIntl();
   const taxonomies = useSelector((state) => state.taxonomy?.data);
   // const [taxonomies, setTaxonomies] = React.useState(taxonomyList);
   const dispatch = useDispatch();
@@ -37,9 +55,25 @@ export default (props) => {
 
   const onDeleteOk = () => {
     if (selected.length) {
-      for (let i = 0; i < selected.length; i++) {
-        dispatch(deleteTaxonomy(selected[i]));
-      }
+      dispatch(deleteTaxonomy(selected))
+        .then(() => {
+          toast.success(
+            <Toast
+              success
+              title={intl.formatMessage(messages.success)}
+              content={intl.formatMessage(messages.delete)}
+            />,
+          );
+        })
+        .catch((e) => {
+          toast.error(
+            <Toast
+              error
+              title={intl.formatMessage(messages.error)}
+              content={e.message}
+            />,
+          );
+        });
     }
     setSelected([]);
     setShowDelete(false);

@@ -1,9 +1,22 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ModalForm } from '@plone/volto/components';
+import { toast } from 'react-toastify';
+import { ModalForm, Toast } from '@plone/volto/components';
+import { defineMessages, useIntl } from 'react-intl';
 import { getTaxonomySchema, addTaxonomy } from '../actions';
 
+const messages = defineMessages({
+  added: {
+    id: 'Taxonomy Added Successfully',
+    defaultMessage: 'Taxonomy Added Successfully',
+  },
+  success: {
+    id: 'Success',
+    defaultMessage: 'Success',
+  },
+});
 const AddTaxonomy = (props) => {
+  const intl = useIntl();
   const { setShow } = props;
   const dispatch = useDispatch();
   const [schema, loaded] = useSelector((state) => [
@@ -26,7 +39,16 @@ const AddTaxonomy = (props) => {
       className="modal"
       onSubmit={(data, callback) => {
         dispatch(addTaxonomy(data))
-          .then((data) => setShow(false))
+          .then((data) => {
+            setShow(false);
+            toast.success(
+              <Toast
+                success
+                title={intl.formatMessage(messages.success)}
+                content={intl.formatMessage(messages.added)}
+              />,
+            );
+          })
           .catch((e) => setError(e));
       }}
       submitError={error.message}

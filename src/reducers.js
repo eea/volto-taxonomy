@@ -6,6 +6,7 @@ import {
   LIST_TAXONOMIES,
   DELETE_TAXONOMY,
 } from './constants';
+import { differenceBy, map } from 'lodash';
 
 const initialState = {};
 
@@ -62,9 +63,14 @@ export function taxonomy(state = initialState, action) {
       };
 
     case `${DELETE_TAXONOMY}_SUCCESS`:
+      const data = differenceBy(
+        state.data,
+        map(action.urls, (item) => ({ name: item })),
+        'name',
+      );
       return {
         ...state,
-        data: action.result,
+        data,
         [getRequestKey(action.type)]: {
           loading: false,
           loaded: true,

@@ -40,10 +40,14 @@ export function addTaxonomy(data) {
   };
 }
 
-export function deleteTaxonomy(data) {
+export function deleteTaxonomy(urls) {
   return {
     type: DELETE_TAXONOMY,
-    request: { op: 'del', path: `/@taxonomy/${data}` },
+    request:
+      typeof urls === 'string'
+        ? { op: 'del', path: `/@taxonomy/${urls}` }
+        : urls.map((url) => ({ op: 'del', path: `/@taxonomy/${url}` })),
+    urls,
   };
 }
 
