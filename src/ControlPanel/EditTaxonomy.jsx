@@ -81,7 +81,7 @@ export default withRouter((props) => {
     setTreeData(data);
   };
 
-  const onSubmit = () => {
+  const onSubmit = React.useCallback(() => {
     const flatdata = getFlatDataFromTree({
       treeData,
       getNodeKey,
@@ -123,7 +123,7 @@ export default withRouter((props) => {
         />,
       );
     }
-  };
+  }, [treeData, dispatch, request, languages, id, intl]);
 
   return (
     <>
@@ -217,10 +217,6 @@ export default withRouter((props) => {
                                   placeholder="id"
                                   onChange={(event) => {
                                     const id = event.target.value;
-                                    console.log('id:', id);
-                                    console.log('tree:', treeData);
-                                    console.log('path:', path);
-                                    console.log('node:', node);
 
                                     const newNode = changeNodeAtPath({
                                       treeData,
