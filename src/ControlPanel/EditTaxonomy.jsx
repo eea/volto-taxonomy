@@ -27,6 +27,7 @@ import SortableTree, {
   addNodeUnderParent,
   removeNodeAtPath,
   changeNodeAtPath,
+  getFlatDataFromTree,
 } from 'react-sortable-tree';
 // import TaxonomySettings from './TaxonomySettings';
 import TaxonomyData from './TaxonomyData';
@@ -44,7 +45,24 @@ const messages = defineMessages({
     id: 'Error',
     defaultMessage: 'Error',
   },
+  duplicatedIds: {
+    id: 'Duplicated Ids',
+    description: 'Duplicated Id warning message.',
+    defaultMessage: 'Duplicated Ids present',
+  },
+  duplicatedIdContent: {
+    id: 'duplicatedIdContent',
+    description: 'Duplicated Id warning message.',
+    defaultMessage:
+      'Duplicated Ids present, use unique ids in order to ' +
+      'save these changes.',
+  },
 });
+
+export function checkForDuplicates(flatdata = []) {
+  const nodes = flatdata.map((item) => item.node.key);
+  return new Set(nodes).size !== nodes.length;
+}
 
 export default withRouter((props) => {
   const { id } = props.match.params;
@@ -68,6 +86,50 @@ export default withRouter((props) => {
 
   const onChange = (data) => {
     setTreeData(data);
+  };
+
+  const onSubmit = () => {
+    const flatdata = getFlatDataFromTree({
+      treeData,
+      getNodeKey,
+    });
+    const isDuplicated = checkForDuplicates(flatdata);
+    if (!isDuplicated) {
+      dispatch(
+        updateTaxonomy(id, {
+          name: request?.name,
+          title: request?.title,
+          languages,
+          tree: treeData,
+        }),
+      )
+        .then(() => {
+          toast.success(
+            <Toast
+              success
+              title={intl.formatMessage(messages.success)}
+              content={intl.formatMessage(messages.saved)}
+            />,
+          );
+        })
+        .catch((e) => {
+          toast.error(
+            <Toast
+              error
+              title={intl.formatMessage(messages.error)}
+              content={e.message}
+            />,
+          );
+        });
+    } else {
+      toast.info(
+        <Toast
+          info
+          title={intl.formatMessage(messages.duplicatedIds)}
+          content={intl.formatMessage(messages.duplicatedIdContent)}
+        />,
+      );
+    }
   };
 
   return (
@@ -162,6 +224,10 @@ export default withRouter((props) => {
                                   placeholder="id"
                                   onChange={(event) => {
                                     const id = event.target.value;
+                                    console.log('id:', id);
+                                    console.log('tree:', treeData);
+                                    console.log('path:', path);
+                                    console.log('node:', node);
 
                                     const newNode = changeNodeAtPath({
                                       treeData,
@@ -229,34 +295,7 @@ export default withRouter((props) => {
                   id="save-taxonomy-data"
                   aria-label={'Save taxonomy'}
                   className="save"
-                  onClick={() => {
-                    dispatch(
-                      updateTaxonomy(id, {
-                        name: request?.name,
-                        title: request?.title,
-                        languages,
-                        tree: treeData,
-                      }),
-                    )
-                      .then(() => {
-                        toast.success(
-                          <Toast
-                            success
-                            title={intl.formatMessage(messages.success)}
-                            content={intl.formatMessage(messages.saved)}
-                          />,
-                        );
-                      })
-                      .catch((e) => {
-                        toast.error(
-                          <Toast
-                            error
-                            title={intl.formatMessage(messages.error)}
-                            content={e.message}
-                          />,
-                        );
-                      });
-                  }}
+                  onClick={onSubmit}
                 >
                   <Icon
                     name={saveSVG}
