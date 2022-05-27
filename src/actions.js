@@ -43,6 +43,7 @@ export function addTaxonomy(data) {
 export function deleteTaxonomy(urls) {
   return {
     type: DELETE_TAXONOMY,
+    mode: 'serial',
     request:
       typeof urls === 'string'
         ? { op: 'del', path: `/@taxonomy/${urls}` }

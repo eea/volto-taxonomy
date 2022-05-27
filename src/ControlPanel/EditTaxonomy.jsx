@@ -22,8 +22,7 @@ import SortableTree, {
   changeNodeAtPath,
   getFlatDataFromTree,
 } from 'react-sortable-tree';
-// import TaxonomySettings from './TaxonomySettings';
-import TaxonomyData from './TaxonomyData';
+import TaxonomySettings from './TaxonomySettings';
 
 const messages = defineMessages({
   saved: {
@@ -63,7 +62,7 @@ export default withRouter((props) => {
   const request = useSelector((state) => state.taxonomy?.taxonomy);
   const intl = useIntl();
 
-  const languages = ['en'];
+  const languages = request?.languages || [request?.default_language];
 
   const [treeData, setTreeData] = React.useState(null);
 
@@ -249,14 +248,14 @@ export default withRouter((props) => {
                       </Tab.Pane>
                     ),
                   },
-                  // {
-                  //   menuItem: 'Edit taxonomy',
-                  //   render: () => (
-                  //     <Tab.Pane>
-                  //       <TaxonomySettings />
-                  //     </Tab.Pane>
-                  //   ),
-                  // },
+                  {
+                    menuItem: 'Edit taxonomy',
+                    render: () => (
+                      <Tab.Pane>
+                        <TaxonomySettings />
+                      </Tab.Pane>
+                    ),
+                  },
                 ]}
               />
             </Segment>

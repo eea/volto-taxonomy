@@ -156,7 +156,7 @@ export default (props) => {
                         </Link>
                       </Table.Cell>
                       <Table.Cell textAlign="right">
-                        {item?.count?.['en']}
+                        {item?.count?.[item.default_language]}
                       </Table.Cell>
                     </Table.Row>
                   ),
