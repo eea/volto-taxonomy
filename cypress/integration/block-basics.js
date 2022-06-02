@@ -5,9 +5,6 @@ describe('Blocks Tests', () => {
   afterEach(tearDownAfterEach);
 
   it('Add Block: Empty', () => {
-    // without this the clear command below does nothing sometimes
-    cy.wait(500);
-
     // Change page title
     cy.get('[contenteditable=true]').first().clear();
 
@@ -26,53 +23,8 @@ describe('Blocks Tests', () => {
     cy.get('#toolbar-save').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
 
+    // then the page view should contain our changes
     cy.contains('My Add-on Page');
     cy.get('.block.image');
-
-    // cy.get('.toolbar-bottom #toolbar-personal').click();
-    // cy.get('.toolbar-content.show .pastanaga-menu-list')
-    //   .contains('Site Setup')
-    //   .click();
-
-    // //install taxonomies
-
-    // cy.get('.controlpanel').contains('Add-Ons').click();
-    // cy.get('.accordion.ui').contains('collective.taxonomy').click();
-
-    // cy.get('.content.active button').then(($btn) => {
-    //   if ($btn.hasClass('installAction')) {
-    //     cy.get('.content.active button').click();
-    //   }
-    // });
-
-    // cy.get('.accordion.ui').contains('eea.api.taxonomy').click();
-    // cy.get('.content.active button').then(($btn) => {
-    //   if ($btn.hasClass('installAction')) {
-    //     cy.get('.content.active button').click();
-    //   }
-    // });
-
-    // cy.get('.toolbar-actions .item').click();
-
-    // cy.get('.controlpanel').contains('Taxonomies').click();
-    // cy.get('.controlpanel-taxonomies .single.line.striped.compact.table')
-    //   .contains('Country Names Mappings')
-    //   .click();
-
-    // cy.get('.single.line.attached.compact.table').contains('Czechia').click();
-
-    // cy.get('.controlpanel-taxonomies .ui.input').eq(1).click().type('czechia');
-    // cy.get('.ui.compact.button').contains('OK').click();
-
-    // cy.get('.ui.segment button').contains('Add new entry').click();
-
-    // cy.get('.single.line.attached.compact.table svg')
-    //   .first()
-    //   .trigger('mousedown', { which: 1 }, { force: true })
-    //   .trigger('mousemove', 0, 120, { force: true })
-    //   .trigger('mouseup');
-    // cy.contains('Save').click();
-
-    // // then the page view should contain our changes
   });
 });
