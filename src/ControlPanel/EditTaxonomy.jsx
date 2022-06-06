@@ -89,7 +89,7 @@ export default withRouter((props) => {
     if (!isDuplicated) {
       dispatch(
         updateTaxonomy(id, {
-          name: request?.name,
+          taxonomy: request?.name,
           title: request?.title,
           languages,
           tree: treeData,
@@ -252,7 +252,7 @@ export default withRouter((props) => {
                     menuItem: 'Edit taxonomy',
                     render: () => (
                       <Tab.Pane>
-                        <TaxonomySettings />
+                        <TaxonomySettings {...props} />
                       </Tab.Pane>
                     ),
                   },
