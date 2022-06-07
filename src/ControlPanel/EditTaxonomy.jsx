@@ -74,7 +74,7 @@ export default withRouter((props) => {
 
   React.useEffect(() => {
     dispatch(getTaxonomy(id));
-  }, [id]);
+  }, [id, dispatch]);
 
   const onChange = (data) => {
     setTreeData(data);

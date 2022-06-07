@@ -51,6 +51,7 @@ export default (props) => {
 
   React.useEffect(() => {
     dispatch(listTaxonomies());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onDeleteOk = () => {

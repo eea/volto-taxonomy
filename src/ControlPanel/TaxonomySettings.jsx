@@ -8,6 +8,12 @@ import { Form, Toast } from '@plone/volto/components';
 import { getTaxonomySchema, updateTaxonomy } from '../actions';
 import { defineMessages, useIntl } from 'react-intl';
 
+const customMessages = defineMessages({
+  saved: {
+    id: 'Changes saved',
+    defaultMessage: 'Changes saved',
+  },
+});
 export default (props) => {
   const dispatch = useDispatch();
   const { id } = props.match.params;
@@ -38,7 +44,7 @@ export default (props) => {
             <Toast
               success
               title={intl.formatMessage(messages.success)}
-              content={intl.formatMessage(messages.success)}
+              content={intl.formatMessage(customMessages.saved)}
             />,
           );
         })
