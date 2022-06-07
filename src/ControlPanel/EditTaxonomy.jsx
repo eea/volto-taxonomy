@@ -68,6 +68,7 @@ export default withRouter((props) => {
 
   React.useEffect(() => {
     if (request) setTreeData(request?.tree);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [request]);
 
   const getNodeKey = ({ treeIndex }) => treeIndex;
