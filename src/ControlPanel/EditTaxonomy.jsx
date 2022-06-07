@@ -123,6 +123,7 @@ export default withRouter((props) => {
         />,
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [treeData, dispatch, request, languages, id, intl]);
 
   return (
