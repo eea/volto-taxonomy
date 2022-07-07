@@ -10,12 +10,22 @@ const TermInput = ({ entry, onChange }) => {
           <div>
             <Label>Title</Label>
           </div>
-          <Input
+          {entry.hierarchy.map((item) => (
+            <Input
+              value={item}
+              key={item}
+              onChange={(ev, { value }) => {
+                onChange('title', value);
+              }}
+            />
+          ))}
+          {/* <Input
             value={entry.title}
             onChange={(ev, { value }) => {
               onChange('title', value);
             }}
-          />
+            />
+          */}
         </Grid.Column>
         <Grid.Column>
           <div>
