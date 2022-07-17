@@ -1,5 +1,29 @@
 import React from 'react';
 import { Grid, Button, Label, Input } from 'semantic-ui-react';
+import { SEPARATOR } from '../constants';
+
+const MultipleValuesTermInput = (props) => {
+  const { entries, onChange } = props;
+  const [items, setItems] = React.useState(entries);
+
+  // entries.map((entry, index) => {
+  //   setItems([...items, entry]);
+  // });
+
+  return entries.map((item, index) => (
+    <Input
+      value={item}
+      key={index}
+      onChange={(ev, { value }) => {
+        let new_items = items;
+        new_items[index] = value;
+        setItems(new_items);
+        onChange('title', SEPARATOR + new_items.join(SEPARATOR));
+        onChange('hierarchy', new_items);
+      }}
+    />
+  ));
+};
 
 const TermInput = ({ entry, onChange }) => {
   const [isEditing, setEditing] = React.useState();
@@ -10,22 +34,10 @@ const TermInput = ({ entry, onChange }) => {
           <div>
             <Label>Title</Label>
           </div>
-          {entry.hierarchy.map((item) => (
-            <Input
-              value={item}
-              key={item}
-              onChange={(ev, { value }) => {
-                onChange('title', value);
-              }}
-            />
-          ))}
-          {/* <Input
-            value={entry.title}
-            onChange={(ev, { value }) => {
-              onChange('title', value);
-            }}
-            />
-          */}
+          <MultipleValuesTermInput
+            entries={entry.hierarchy}
+            onChange={onChange}
+          />
         </Grid.Column>
         <Grid.Column>
           <div>
@@ -52,7 +64,7 @@ const TermInput = ({ entry, onChange }) => {
     </Grid>
   ) : (
     <Button title={entry.token} compact basic onClick={() => setEditing(true)}>
-      <span>{entry.title}</span>
+      <span>{entry.hierarchy.join(SEPARATOR)}</span>
     </Button>
   );
 };
