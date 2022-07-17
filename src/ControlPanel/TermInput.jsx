@@ -64,7 +64,9 @@ const TermInput = ({ entry, onChange }) => {
     </Grid>
   ) : (
     <Button title={entry.token} compact basic onClick={() => setEditing(true)}>
-      <span>{entry.hierarchy.join(SEPARATOR)}</span>
+      <span>
+        {entry?.hierarchy ? entry.hierarchy.join(SEPARATOR) : entry.title}
+      </span>
     </Button>
   );
 };

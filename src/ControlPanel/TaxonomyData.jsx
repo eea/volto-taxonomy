@@ -6,8 +6,7 @@ import { Segment, Ref, Button, Table } from 'semantic-ui-react';
 import { getTaxonomy, updateTaxonomy } from '../actions';
 import { Icon } from '@plone/volto/components';
 import { DragDropList } from '@plone/volto/components';
-
-// import deleteSVG from '@plone/volto/icons/delete.svg';
+import deleteSVG from '@plone/volto/icons/delete.svg';
 import dragSVG from '@plone/volto/icons/drag.svg';
 
 import TermInput from './TermInput';
@@ -94,31 +93,49 @@ const TaxonomyData = (props) => {
                       const i = state.order[lang][index];
                       const entry = state.data[lang][i];
                       return (
-                        <Table.Cell key={lang}>
-                          <TermInput
-                            entry={entry}
-                            onChange={(id, value) => {
-                              const newState = { ...state };
-                              newState.data[lang][i] = {
-                                ...newState.data[lang][i],
-                                [id]: value,
-                              };
+                        <>
+                          <Table.Cell key={lang}>
+                            <TermInput
+                              entry={entry}
+                              onChange={(id, value) => {
+                                const newState = { ...state };
+                                newState.data[lang][i] = {
+                                  ...newState.data[lang][i],
+                                  [id]: value,
+                                };
 
-                              setState(newState);
-                            }}
-                          />
-                        </Table.Cell>
+                                setState(newState);
+                              }}
+                            />
+                          </Table.Cell>
+                          <Table.Cell>
+                            <Button
+                              basic
+                              onClick={() => {
+                                const newState = { ...state };
+                                let lang_array = newState.data[lang];
+                                lang_array.splice(i, 1);
+                                newState.data[lang] = lang_array;
+
+                                let order_array = newState.order[lang];
+                                order_array.splice(i, 1);
+                                newState.order[lang] = order_array;
+
+                                newState.count[lang] = lang_array.length;
+
+                                setState(newState);
+                              }}
+                            >
+                              <Icon
+                                className="circled"
+                                name={deleteSVG}
+                                size="12px"
+                              />
+                            </Button>
+                          </Table.Cell>
+                        </>
                       );
                     })}
-                    <Table.Cell>
-                      {/* <Button basic onClick={() => {}}>
-                        <Icon
-                          className="circled"
-                          name={deleteSVG}
-                          size="12px"
-                        />
-                      </Button> */}
-                    </Table.Cell>
                   </Table.Row>
                 </Ref>
               );
@@ -131,7 +148,11 @@ const TaxonomyData = (props) => {
           onClick={() => {
             const newState = { ...state };
             Object.keys(state.data).forEach((lang) => {
-              newState.data[lang].push({ token: uuid(), title: '...' });
+              newState.data[lang].push({
+                token: uuid(),
+                title: '...',
+                hierarchy: ['...'],
+              });
               newState.order[lang].push(newState.order[lang].length);
             });
             setState(newState);
