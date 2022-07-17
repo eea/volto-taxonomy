@@ -10,52 +10,26 @@ const MultipleValuesTermInput = (props) => {
   const [items, setItems] = React.useState(entries);
 
   return (
-    <>
-      <List divided relaxed>
-        {entries.map((item, index) => (
-          <List.Item>
-            <List.Content>
-              <Input
-                fluid
-                value={item}
-                key={index}
-                onChange={(ev, { value }) => {
-                  let new_items = items;
-                  new_items[index] = value;
-                  setItems(new_items);
-                  onChange('title', SEPARATOR + new_items.join(SEPARATOR));
-                  onChange('hierarchy', new_items);
-                }}
-              />
-              <Button
-                basic
-                onClick={() => {
-                  let new_items = items;
-                  new_items.splice(index, 1);
-                  setItems(new_items);
-                  onChange('title', SEPARATOR + new_items.join(SEPARATOR));
-                  onChange('hierarchy', new_items);
-                }}
-              >
-                <Icon className="circled" name={deleteSVG} size="12px" />
-              </Button>
-            </List.Content>
-          </List.Item>
-        ))}
-      </List>
-      <Button
-        basic
-        onClick={() => {
-          let new_items = items;
-          new_items.push('...');
-          setItems(new_items);
-          onChange('title', SEPARATOR + new_items.join(SEPARATOR));
-          onChange('hierarchy', new_items);
-        }}
-      >
-        <Icon className="circled" name={addSVG} size="12px" />
-      </Button>
-    </>
+    <List divided relaxed>
+      {entries.map((item, index) => (
+        <List.Item>
+          <List.Content>
+            <Input
+              fluid
+              value={item}
+              key={index}
+              onChange={(ev, { value }) => {
+                let new_items = items;
+                new_items[index] = value;
+                setItems(new_items);
+                onChange('title', SEPARATOR + new_items.join(SEPARATOR));
+                onChange('hierarchy', new_items);
+              }}
+            />
+          </List.Content>
+        </List.Item>
+      ))}
+    </List>
   );
 };
 

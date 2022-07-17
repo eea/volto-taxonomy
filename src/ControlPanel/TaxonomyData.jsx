@@ -6,8 +6,10 @@ import { Segment, Ref, Button, Table } from 'semantic-ui-react';
 import { getTaxonomy, updateTaxonomy } from '../actions';
 import { Icon } from '@plone/volto/components';
 import { DragDropList } from '@plone/volto/components';
+import addSVG from '@plone/volto/icons/add.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 import dragSVG from '@plone/volto/icons/drag.svg';
+import { SEPARATOR } from '../constants';
 
 import TermInput from './TermInput';
 
@@ -109,6 +111,38 @@ const TaxonomyData = (props) => {
                             />
                           </Table.Cell>
                           <Table.Cell>
+                            <Button
+                              basic
+                              onClick={() => {
+                                const newState = { ...state };
+                                let lang_array = newState.data[lang];
+                                let new_item = {
+                                  ...newState.data[lang][i],
+                                };
+                                new_item['hierarchy'].push('...');
+                                new_item['title'] += SEPARATOR + '...';
+                                new_item['token'] = uuid();
+                                if (index === lang_array.length - 1) {
+                                  lang_array.push(new_item);
+                                } else {
+                                  lang_array.splice(i + 1, 0, new_item);
+                                }
+                                newState.data[lang] = lang_array;
+
+                                let order_array = [
+                                  ...Array(lang_array.length).keys(),
+                                ];
+                                newState.order[lang] = order_array;
+                                newState.count[lang] = lang_array.length;
+                                setState(newState);
+                              }}
+                            >
+                              <Icon
+                                className="circled"
+                                name={addSVG}
+                                size="12px"
+                              />
+                            </Button>
                             <Button
                               basic
                               onClick={() => {
