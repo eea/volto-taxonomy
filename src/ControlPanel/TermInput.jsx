@@ -1,28 +1,43 @@
 import React from 'react';
 import { Grid, Button, Label, Input } from 'semantic-ui-react';
 import { SEPARATOR } from '../constants';
+import { Icon } from '@plone/volto/components';
+import addSVG from '@plone/volto/icons/add.svg';
+import { v4 as uuid } from 'uuid';
 
 const MultipleValuesTermInput = (props) => {
   const { entries, onChange } = props;
   const [items, setItems] = React.useState(entries);
 
-  // entries.map((entry, index) => {
-  //   setItems([...items, entry]);
-  // });
-
-  return entries.map((item, index) => (
-    <Input
-      value={item}
-      key={index}
-      onChange={(ev, { value }) => {
-        let new_items = items;
-        new_items[index] = value;
-        setItems(new_items);
-        onChange('title', SEPARATOR + new_items.join(SEPARATOR));
-        onChange('hierarchy', new_items);
-      }}
-    />
-  ));
+  return (
+    <>
+      {entries.map((item, index) => (
+        <Input
+          value={item}
+          key={index}
+          onChange={(ev, { value }) => {
+            let new_items = items;
+            new_items[index] = value;
+            setItems(new_items);
+            onChange('title', SEPARATOR + new_items.join(SEPARATOR));
+            onChange('hierarchy', new_items);
+          }}
+        />
+      ))}
+      <Button
+        basic
+        onClick={() => {
+          let new_items = items;
+          new_items.push('...');
+          setItems(new_items);
+          onChange('title', SEPARATOR + new_items.join(SEPARATOR));
+          onChange('hierarchy', new_items);
+        }}
+      >
+        <Icon className="circled" name={addSVG} size="12px" />
+      </Button>
+    </>
+  );
 };
 
 const TermInput = ({ entry, onChange }) => {
