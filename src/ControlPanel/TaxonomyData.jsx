@@ -10,6 +10,7 @@ import addSVG from '@plone/volto/icons/add.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 import dragSVG from '@plone/volto/icons/drag.svg';
 import { SEPARATOR } from '../constants';
+import subRightSVG from '@plone/volto/icons/sub-right.svg';
 
 import TermInput from './TermInput';
 
@@ -30,6 +31,22 @@ const TaxonomyData = (props) => {
   const request = taxonomy.get;
   const { loading, loaded, error } = request || {};
   const data = taxonomy?.data?.[url];
+
+  const onChangeTerm = (id, value, old_value, lang, i) => {
+    const newState = { ...state };
+    newState.data[lang].map((item) => {
+      const h_index = item.hierarchy.indexOf(old_value);
+      if (id === 'title' && h_index !== -1) {
+        item.hierarchy[h_index] = value;
+        item.title = SEPARATOR + item.hierarchy.join(SEPARATOR);
+      }
+      if (id === 'token') {
+        item.token = value;
+      }
+      return item;
+    });
+    setState(newState);
+  };
 
   React.useEffect(() => {
     if (id && !loaded && !loading) {
@@ -95,79 +112,86 @@ const TaxonomyData = (props) => {
                       const i = state.order[lang][index];
                       const entry = state.data[lang][i];
                       return (
-                        <>
-                          <Table.Cell key={lang}>
-                            <TermInput
-                              entry={entry}
-                              onChange={(id, value) => {
-                                const newState = { ...state };
-                                newState.data[lang][i] = {
-                                  ...newState.data[lang][i],
-                                  [id]: value,
-                                };
-
-                                setState(newState);
-                              }}
-                            />
-                          </Table.Cell>
-                          <Table.Cell>
-                            <Button
-                              basic
-                              onClick={() => {
-                                const newState = { ...state };
-                                let lang_array = newState.data[lang];
-                                let new_item = {
-                                  ...newState.data[lang][i],
-                                };
-                                new_item['hierarchy'].push('...');
-                                new_item['title'] += SEPARATOR + '...';
-                                new_item['token'] = uuid();
-                                if (index === lang_array.length - 1) {
-                                  lang_array.push(new_item);
-                                } else {
-                                  lang_array.splice(i + 1, 0, new_item);
+                        entry && (
+                          <>
+                            <Table.Cell key={lang}>
+                              {entry?.hierarchy.map((h, index) =>
+                                index ? (
+                                  <>
+                                    <Icon name={subRightSVG} size="18px" />{' '}
+                                  </>
+                                ) : (
+                                  ''
+                                ),
+                              )}
+                              <TermInput
+                                entry={entry}
+                                onChange={(id, value, old_value) =>
+                                  onChangeTerm(id, value, old_value, lang, i)
                                 }
-                                newState.data[lang] = lang_array;
-
-                                let order_array = [
-                                  ...Array(lang_array.length).keys(),
-                                ];
-                                newState.order[lang] = order_array;
-                                newState.count[lang] = lang_array.length;
-                                setState(newState);
-                              }}
-                            >
-                              <Icon
-                                className="circled"
-                                name={addSVG}
-                                size="12px"
                               />
-                            </Button>
-                            <Button
-                              basic
-                              onClick={() => {
-                                const newState = { ...state };
-                                let lang_array = newState.data[lang];
-                                lang_array.splice(i, 1);
-                                newState.data[lang] = lang_array;
+                            </Table.Cell>
+                            <Table.Cell>
+                              <Button
+                                basic
+                                onClick={() => {
+                                  const newState = { ...state };
+                                  let lang_array = [...newState.data[lang]];
+                                  let new_item = JSON.parse(
+                                    JSON.stringify(newState.data[lang][i]),
+                                  );
+                                  new_item.hierarchy.splice(-1, 1, '...');
+                                  new_item.title =
+                                    SEPARATOR +
+                                    new_item?.hierarchy.join(SEPARATOR);
+                                  new_item['token'] = uuid();
+                                  if (index === lang_array.length - 1) {
+                                    lang_array.push(new_item);
+                                  } else {
+                                    lang_array.splice(i + 1, 0, new_item);
+                                  }
+                                  newState.data[lang] = lang_array;
 
-                                let order_array = newState.order[lang];
-                                order_array.splice(i, 1);
-                                newState.order[lang] = order_array;
+                                  // let order_array = [
+                                  //   ...Array(lang_array.length).keys(),
+                                  // ];
+                                  // newState.order[lang] = order_array;
+                                  // newState.count[lang] = lang_array.length;
+                                  setState(newState);
+                                }}
+                              >
+                                <Icon
+                                  className="circled"
+                                  name={addSVG}
+                                  size="12px"
+                                />
+                              </Button>
+                              <Button
+                                basic
+                                onClick={() => {
+                                  const newState = { ...state };
+                                  let lang_array = newState.data[lang];
+                                  lang_array.splice(i, 1);
+                                  newState.data[lang] = lang_array;
 
-                                newState.count[lang] = lang_array.length;
+                                  let order_array = newState.order[lang];
+                                  order_array.splice(i, 1);
+                                  newState.order[lang] = order_array;
 
-                                setState(newState);
-                              }}
-                            >
-                              <Icon
-                                className="circled"
-                                name={deleteSVG}
-                                size="12px"
-                              />
-                            </Button>
-                          </Table.Cell>
-                        </>
+                                  newState.count[lang] = lang_array.length;
+
+                                  setState(newState);
+                                }}
+                              >
+                                <Icon
+                                  className="circled"
+                                  name={deleteSVG}
+                                  size="12px"
+                                />
+                              </Button>
+                            </Table.Cell>
+                          </>
+                        )
                       );
                     })}
                   </Table.Row>
