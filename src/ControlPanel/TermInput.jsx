@@ -6,7 +6,7 @@ import { SEPARATOR } from '../constants';
 // import deleteSVG from '@plone/volto/icons/delete.svg';
 
 const MultipleValuesTermInput = (props) => {
-  const { entries, onChange } = props;
+  const { entries, onChange, token } = props;
   const [items, setItems] = React.useState(entries);
   const entries_copy = [...entries];
   const editable_item = entries_copy.splice(-1);
@@ -22,7 +22,7 @@ const MultipleValuesTermInput = (props) => {
         new_items[editable_index] = value;
         setItems(new_items);
         // onChange('title', SEPARATOR + new_items.join(SEPARATOR), old_value);
-        onChange('title', value, old_value);
+        onChange('title', value, token, old_value);
       }}
     />
   );
@@ -44,6 +44,7 @@ const TermInput = ({ entry, onChange }) => {
               </Label>
               <MultipleValuesTermInput
                 entries={entry.hierarchy}
+                token={entry.token}
                 onChange={onChange}
               />
             </Grid.Column>
@@ -55,7 +56,7 @@ const TermInput = ({ entry, onChange }) => {
                 className="ccl-text-input"
                 value={entry.token}
                 onChange={(e, { value }) => {
-                  onChange('token', value, '');
+                  onChange('token', value, value, '');
                 }}
               />
             </Grid.Column>

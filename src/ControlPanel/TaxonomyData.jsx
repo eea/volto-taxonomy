@@ -32,13 +32,36 @@ const TaxonomyData = (props) => {
   const { loading, loaded, error } = request || {};
   const data = taxonomy?.data?.[url];
 
-  const onChangeTerm = (id, value, old_value, lang, i) => {
-    const newState = { ...state };
+  const getTitleFromHierarchy = (hierarchy) => {
+    return SEPARATOR + hierarchy.join(SEPARATOR);
+  };
+
+  const onChangeTerm = (id, value, token, old_value, lang, i) => {
+    const newState = JSON.parse(JSON.stringify(state));
+    const this_item = JSON.parse(
+      JSON.stringify(
+        state.data[lang].filter((item) => item.token === token)[0],
+      ),
+    );
     newState.data[lang].map((item) => {
-      const h_index = item.hierarchy.indexOf(old_value);
-      if (id === 'title' && h_index !== -1) {
-        item.hierarchy[h_index] = value;
-        item.title = SEPARATOR + item.hierarchy.join(SEPARATOR);
+      const matched = item.title.match(`^${this_item.title}`);
+      if (id === 'title' && token === item.token) {
+        item.hierarchy[this_item.hierarchy.length - 1] = value;
+        item.title = getTitleFromHierarchy(item.hierarchy);
+      } else if (
+        id === 'title' &&
+        matched &&
+        matched.length > 0 &&
+        value !== ''
+      ) {
+        const this_item_hierarchy_position = this_item.hierarchy.length - 1;
+        if (
+          item.hierarchy[this_item_hierarchy_position] === old_value &&
+          item.hierarchy.length - 1 !== this_item_hierarchy_position
+        ) {
+          item.hierarchy[this_item_hierarchy_position] = value;
+        }
+        item.title = getTitleFromHierarchy(item.hierarchy);
       }
       if (id === 'token') {
         item.token = value;
@@ -126,8 +149,15 @@ const TaxonomyData = (props) => {
                               )}
                               <TermInput
                                 entry={entry}
-                                onChange={(id, value, old_value) =>
-                                  onChangeTerm(id, value, old_value, lang, i)
+                                onChange={(id, value, token, old_value) =>
+                                  onChangeTerm(
+                                    id,
+                                    value,
+                                    token,
+                                    old_value,
+                                    lang,
+                                    i,
+                                  )
                                 }
                               />
                             </Table.Cell>
