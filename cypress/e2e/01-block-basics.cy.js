@@ -1,10 +1,13 @@
-import { setupBeforeEach, tearDownAfterEach } from '../support';
+import { setupBeforeEach, tearDownAfterEach } from '../support/e2e';
 
 describe('Blocks Tests', () => {
   beforeEach(setupBeforeEach);
   afterEach(tearDownAfterEach);
 
   it('Add Block: Empty', () => {
+    // without this the clear command below does nothing sometimes
+    cy.wait(500);
+
     // Change page title
     cy.get('[contenteditable=true]').first().clear();
 
