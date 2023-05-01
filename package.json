@@ -20,9 +20,9 @@
     "react-sortable-tree": "2.8.0"
   },
   "devDependencies": {
-    "release-it": "*",
     "@cypress/code-coverage": "^3.9.5",
-    "babel-plugin-transform-class-properties": "^6.24.1"
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "release-it": "*"
   },
   "scripts": {
     "release": "release-it",

@@ -42,7 +42,9 @@ const messages = defineMessages({
 
 export default (props) => {
   const intl = useIntl();
-  const taxonomies = useSelector((state) => state.taxonomy?.data);
+  const taxonomies = useSelector(
+    (state) => state.taxonomy?.data?.items ?? state.taxonomy?.data,
+  );
   // const [taxonomies, setTaxonomies] = React.useState(taxonomyList);
   const dispatch = useDispatch();
   const [show, setShow] = React.useState(false);
