@@ -1,5 +1,12 @@
 import React from 'react';
-import { Container, Header, Segment, Tab, Button } from 'semantic-ui-react';
+import {
+  Container,
+  Header,
+  Segment,
+  Tab,
+  Button,
+  Menu,
+} from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +30,7 @@ import SortableTree, {
   getFlatDataFromTree,
 } from 'react-sortable-tree';
 import TaxonomySettings from './TaxonomySettings';
+import './button.less';
 
 const messages = defineMessages({
   saved: {
@@ -157,10 +165,13 @@ export default withRouter((props) => {
                           <SortableTree
                             treeData={treeData}
                             onChange={onChange}
+                            className="taxonomy-tree-wrapper"
                             isVirtualized={false}
                             generateNodeProps={({ node, path }) => ({
                               buttons: [
-                                <button
+                                <Menu.Item
+                                  icon
+                                  as={Button}
                                   onClick={() => {
                                     const insertNode = addNodeUnderParent({
                                       treeData,
@@ -176,8 +187,10 @@ export default withRouter((props) => {
                                   }}
                                 >
                                   <Icon name={navSVG} size="24px" />
-                                </button>,
-                                <button
+                                </Menu.Item>,
+                                <Menu.Item
+                                  icon
+                                  as={Button}
                                   onClick={() => {
                                     const removedNode = removeNodeAtPath({
                                       treeData,
@@ -187,8 +200,26 @@ export default withRouter((props) => {
                                     setTreeData(removedNode);
                                   }}
                                 >
-                                  <Icon name={deleteSVG} size="24px" />
-                                </button>,
+                                  <Icon
+                                    name={deleteSVG}
+                                    size="24px"
+                                    className="delete"
+                                  />
+                                </Menu.Item>,
+                                <Menu.Item
+                                  icon
+                                  as={Button}
+                                  onClick={() => {
+                                    setTreeData((state) =>
+                                      state.concat({
+                                        title: '',
+                                        key: uuid(),
+                                      }),
+                                    );
+                                  }}
+                                >
+                                  <Icon name={addDocumentSVG} size="24px" />
+                                </Menu.Item>,
                               ],
                               title: (
                                 <input
@@ -234,18 +265,6 @@ export default withRouter((props) => {
                               ),
                             })}
                           />
-                          <button
-                            onClick={() => {
-                              setTreeData((state) =>
-                                state.concat({
-                                  title: '',
-                                  key: uuid(),
-                                }),
-                              );
-                            }}
-                          >
-                            <Icon name={addDocumentSVG} size="24px" />
-                          </button>
                         </div>
                       </Tab.Pane>
                     ),
