@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-taxonomy",
-  "version": "2.0.5",
+  "version": "3.1.0",
   "description": "@eeacms/volto-taxonomy: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -20,9 +20,10 @@
     "react-sortable-tree": "2.8.0"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.9.5",
+    "@cypress/code-coverage": "^3.10.0",
+    "@plone/scripts": "*",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "release-it": "*"
+    "md5": "^2.3.0"
   },
   "scripts": {
     "release": "release-it",
