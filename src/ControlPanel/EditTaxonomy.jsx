@@ -5,7 +5,9 @@ import {
   Segment,
   Tab,
   Button,
+  Input,
   Menu,
+  Message,
 } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { toast } from 'react-toastify';
@@ -19,6 +21,7 @@ import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 import addDocumentSVG from '@plone/volto/icons/add-document.svg';
+import addSVG from '@plone/volto/icons/add.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
 import navSVG from '@plone/volto/icons/nav.svg';
 import { getTaxonomy, updateTaxonomy } from '../actions';
@@ -56,6 +59,22 @@ const messages = defineMessages({
     defaultMessage:
       'Duplicated Ids present, use unique ids in order to ' +
       'save these changes.',
+  },
+  PleaseAddTaxonomy: {
+    id: 'Please add a new taxonomy entry',
+    defaultMessage: 'Please add a new taxonomy entry',
+  },
+  addSameLevel: {
+    id: 'Add node at same level',
+    defaultMessage: 'Add node at same level',
+  },
+  addChildNode: {
+    id: 'Add child node',
+    defaultMessage: 'Add child node',
+  },
+  deleteNode: {
+    id: 'Delete node',
+    defaultMessage: 'Delete node',
   },
 });
 
@@ -143,7 +162,7 @@ export default withRouter((props) => {
             <Header as="h3">Taxonomy: {request?.title || 'loading...'}</Header>
           </Segment>
 
-          {treeData ? (
+          {treeData?.length ? (
             <Segment>
               <Tab
                 menu={{
@@ -167,11 +186,19 @@ export default withRouter((props) => {
                             onChange={onChange}
                             className="taxonomy-tree-wrapper"
                             isVirtualized={false}
-                            generateNodeProps={({ node, path }) => ({
+                            generateNodeProps={({
+                              node,
+                              path,
+                              treeIndex,
+                              lowerSiblingCounts,
+                            }) => ({
                               buttons: [
                                 <Menu.Item
                                   icon
                                   as={Button}
+                                  name={intl.formatMessage(
+                                    messages.addChildNode,
+                                  )}
                                   onClick={() => {
                                     const insertNode = addNodeUnderParent({
                                       treeData,
@@ -186,7 +213,13 @@ export default withRouter((props) => {
                                     setTreeData(insertNode.treeData);
                                   }}
                                 >
-                                  <Icon name={navSVG} size="24px" />
+                                  <Icon
+                                    name={navSVG}
+                                    size="24px"
+                                    title={intl.formatMessage(
+                                      messages.addChildNode,
+                                    )}
+                                  />
                                 </Menu.Item>,
                                 <Menu.Item
                                   icon
@@ -204,26 +237,43 @@ export default withRouter((props) => {
                                     name={deleteSVG}
                                     size="24px"
                                     className="delete"
+                                    title={intl.formatMessage(
+                                      messages.deleteNode,
+                                    )}
                                   />
                                 </Menu.Item>,
                                 <Menu.Item
                                   icon
+                                  name={intl.formatMessage(
+                                    messages.addSameLevel,
+                                  )}
                                   as={Button}
                                   onClick={() => {
-                                    setTreeData((state) =>
-                                      state.concat({
-                                        title: '',
+                                    const insertNode = addNodeUnderParent({
+                                      treeData,
+                                      parentKey: path[path.length - 2],
+                                      expandParent: true,
+                                      getNodeKey,
+                                      newNode: {
+                                        title: ``,
                                         key: uuid(),
-                                      }),
-                                    );
+                                      },
+                                    });
+                                    setTreeData(insertNode.treeData);
                                   }}
                                 >
-                                  <Icon name={addDocumentSVG} size="24px" />
+                                  <Icon
+                                    name={addDocumentSVG}
+                                    size="24px"
+                                    title={intl.formatMessage(
+                                      messages.addSameLevel,
+                                    )}
+                                  />
                                 </Menu.Item>,
                               ],
                               title: (
-                                <input
-                                  style={{ fontSize: '1.1rem' }}
+                                <Input
+                                  style={{ fontSize: '1rem' }}
                                   value={node.title}
                                   placeholder="Title"
                                   onChange={(event) => {
@@ -243,9 +293,9 @@ export default withRouter((props) => {
                                 />
                               ),
                               subtitle: (
-                                <input
-                                  style={{ fontSize: '1.1rem' }}
+                                <Input
                                   value={node.key}
+                                  style={{ fontSize: '1rem' }}
                                   placeholder="id"
                                   onChange={(event) => {
                                     const id = event.target.value;
@@ -280,7 +330,28 @@ export default withRouter((props) => {
                 ]}
               />
             </Segment>
-          ) : null}
+          ) : (
+            <Segment>
+              <Message>
+                <div className="add-taxonomy placeholder">
+                  <Button
+                    icon
+                    onClick={() => {
+                      setTreeData((state) =>
+                        state.concat({
+                          title: '',
+                          key: uuid(),
+                        }),
+                      );
+                    }}
+                  >
+                    <Icon name={addSVG} size="24px" />
+                  </Button>
+                  <p>{intl.formatMessage(messages.PleaseAddTaxonomy)}</p>
+                </div>
+              </Message>
+            </Segment>
+          )}
         </Segment.Group>
       </Container>
 
