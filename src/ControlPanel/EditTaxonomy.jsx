@@ -8,15 +8,25 @@ import {
   Input,
   Menu,
   Message,
+  Grid,
 } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { toast } from 'react-toastify';
+import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { Icon, Toolbar, Toast } from '@plone/volto/components';
+import {
+  Option,
+  DropdownIndicator,
+  selectTheme,
+  customSelectStyles,
+} from '@plone/volto/components/manage/Widgets/SelectStyling';
 import { Portal } from 'react-portal';
+import config from '@plone/volto/registry';
 import { defineMessages, useIntl } from 'react-intl';
+import Select from 'react-select';
 import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
@@ -76,6 +86,10 @@ const messages = defineMessages({
     id: 'Delete node',
     defaultMessage: 'Delete node',
   },
+  selectLanguage: {
+    id: 'Select language',
+    defaultMessage: 'Select language',
+  },
 });
 
 export function checkForDuplicates(flatdata = []) {
@@ -88,25 +102,61 @@ export default withRouter((props) => {
   const dispatch = useDispatch();
   const request = useSelector((state) => state.taxonomy?.taxonomy);
   const intl = useIntl();
+  const [treeData, setTreeData] = React.useState(null);
+
+  const [languageToShow, setLanguage] = React.useState(null);
 
   const languages = request?.languages || [request?.default_language];
 
-  const [treeData, setTreeData] = React.useState(null);
+  const defaultLanguage = config.settings.languages.find(
+    (lang) => lang.code === request?.default_language,
+  );
 
   React.useEffect(() => {
     if (request) setTreeData(request?.tree);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [request]);
 
-  const getNodeKey = ({ treeIndex }) => treeIndex;
-
   React.useEffect(() => {
     dispatch(getTaxonomy(id));
   }, [id, dispatch]);
 
+  React.useEffect(() => {
+    setLanguage({
+      label: defaultLanguage?.name,
+      value: defaultLanguage?.code,
+    });
+  }, [defaultLanguage]);
+
+  const eeaLanguages = React.useCallback(() => {
+    const EEAlanguages = config.settings.languages ?? languages;
+    return !isEmpty(EEAlanguages)
+      ? EEAlanguages.map((item) => ({
+          label: item?.name,
+          value: item?.code,
+        }))
+      : [];
+  }, [languages]);
+
+  const getNodeKey = ({ treeIndex }) => treeIndex;
+
   const onChange = (data) => {
     setTreeData(data);
   };
+
+  const handleLanguageChange = React.useCallback((value) => {
+    setLanguage(value);
+  }, []);
+
+  const getTranslatedNodeTitle = React.useCallback(
+    (node) => {
+      const term = treeData?.find((item) => item?.key === node?.key);
+      return term?.translations
+        ? term?.translations[languageToShow?.value || defaultLanguage?.code]
+        : node.title;
+    },
+    [treeData, languageToShow, defaultLanguage],
+  );
 
   const onSubmit = React.useCallback(() => {
     const flatdata = getFlatDataFromTree({
@@ -179,6 +229,35 @@ export default withRouter((props) => {
                     menuItem: 'Edit taxonomy data',
                     render: () => (
                       <Tab.Pane>
+                        <Grid>
+                          <Grid.Row>
+                            <Grid.Column width={2}>
+                              <div className="select-wrapper">
+                                <label htmlFor={`select-language`}>
+                                  {intl.formatMessage(messages.selectLanguage)}
+                                </label>
+                              </div>
+                            </Grid.Column>
+                            <Grid.Column
+                              width={4}
+                              style={{ flexDirection: 'unset' }}
+                            >
+                              <Select
+                                defaultValue={[]}
+                                id={'lang-selector'}
+                                name={'lang-selector'}
+                                className="react-select-container"
+                                classNamePrefix="react-select"
+                                options={eeaLanguages()}
+                                styles={customSelectStyles}
+                                theme={selectTheme}
+                                components={{ DropdownIndicator, Option }}
+                                value={languageToShow}
+                                onChange={handleLanguageChange}
+                              />
+                            </Grid.Column>
+                          </Grid.Row>
+                        </Grid>
                         {/* <TaxonomyData id={id} taxonomy={request} /> */}
                         <div>
                           <SortableTree
@@ -274,7 +353,7 @@ export default withRouter((props) => {
                               title: (
                                 <Input
                                   style={{ fontSize: '1rem' }}
-                                  value={node.title}
+                                  value={getTranslatedNodeTitle(node)}
                                   placeholder="Title"
                                   onChange={(event) => {
                                     const name = event.target.value;
@@ -286,6 +365,10 @@ export default withRouter((props) => {
                                       newNode: {
                                         ...node,
                                         title: name,
+                                        translations: {
+                                          ...node.translations,
+                                          [languageToShow.value]: name,
+                                        },
                                       },
                                     });
                                     setTreeData(newNode);
