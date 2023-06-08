@@ -1,6 +1,7 @@
 import EditTaxonomy from './ControlPanel/EditTaxonomy';
 import Taxonomies from './ControlPanel/Taxonomies';
 import { taxonomy } from './reducers';
+import 'react-sortable-tree/style.css';
 
 const applyConfig = (config) => {
   config.addonRoutes = [

@@ -16,6 +16,9 @@
     "type": "git",
     "url": "git@github.com:eea/volto-taxonomy.git"
   },
+  "dependencies": {
+    "react-sortable-tree": "2.8.0"
+  },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",
     "@plone/scripts": "*",
