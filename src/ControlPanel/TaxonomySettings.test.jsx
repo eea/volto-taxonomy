@@ -82,9 +82,8 @@ const dispatchMock = jest.fn();
 useDispatchMock.mockReturnValue(dispatchMock);
 
 describe('TaxonomySettings', () => {
-  it('renders correctly and dispatches action when schema is not available', async () => {
+  it('renders correctly and does not dispatch action when schema is available', async () => {
     const match = { params: { id: '1' } };
-
     const history = createMemoryHistory();
 
     render(
@@ -102,7 +101,6 @@ describe('TaxonomySettings', () => {
 
   it('renders correctly and dispatches action when schema is not available', async () => {
     const match = { params: { id: '1' } };
-
     const history = createMemoryHistory();
 
     const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
