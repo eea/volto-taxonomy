@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 import { map, includes, pull } from 'lodash';
 import {
   Container,
@@ -13,7 +12,7 @@ import {
 } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { toast } from 'react-toastify';
-import { defineMessages, useIntl } from 'react-intl';
+import { defineMessages, useIntl, FormattedMessage } from 'react-intl';
 import { Icon, Toolbar, Toast } from '@plone/volto/components';
 import { Link } from 'react-router-dom';
 import { Portal } from 'react-portal';
@@ -45,7 +44,6 @@ export default (props) => {
   const taxonomies = useSelector(
     (state) => state.taxonomy?.data?.items ?? state.taxonomy?.data,
   );
-  // const [taxonomies, setTaxonomies] = React.useState(taxonomyList);
   const dispatch = useDispatch();
   const [show, setShow] = React.useState(false);
   const [selected, setSelected] = React.useState([]);
