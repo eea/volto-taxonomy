@@ -12,12 +12,11 @@ import {
 import { Helmet } from '@plone/volto/helpers';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { Icon, Toolbar, Toast } from '@plone/volto/components';
 import { Portal } from 'react-portal';
 import { defineMessages, useIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 import addDocumentSVG from '@plone/volto/icons/add-document.svg';
