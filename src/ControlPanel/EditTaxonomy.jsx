@@ -99,7 +99,7 @@ export default withRouter((props) => {
 
   const [languageToShow, setLanguage] = React.useState(null);
 
-  const languages = languageToShow || [request?.default_language];
+  const languages = [languageToShow] || [request?.default_language];
 
   const defaultLanguage = config.settings.languages.find(
     (lang) => lang.code === request?.default_language,
@@ -337,14 +337,15 @@ export default withRouter((props) => {
                                   placeholder="Title"
                                   onChange={(event) => {
                                     const name = event.target.value;
-
                                     const newNode = changeNodeAtPath({
                                       treeData,
                                       path,
                                       getNodeKey,
                                       newNode: {
                                         ...node,
-                                        title: name,
+                                        ...(languageToShow === defaultLanguage
+                                          ? { title: name }
+                                          : {}),
                                         translations: {
                                           ...node.translations,
                                           [languageToShow]: name,
