@@ -34,7 +34,6 @@ import SortableTree, {
   removeNodeAtPath,
   changeNodeAtPath,
   getFlatDataFromTree,
-  getNodeAtPath,
 } from 'react-sortable-tree';
 import TaxonomySettings from './TaxonomySettings';
 import './button.less';
@@ -80,10 +79,6 @@ const messages = defineMessages({
     id: 'Delete node',
     defaultMessage: 'Delete node',
   },
-  // selectLanguage: {
-  //   id: 'Select language',
-  //   defaultMessage: 'Select language',
-  // },
 });
 
 export function checkForDuplicates(flatdata = []) {
@@ -131,12 +126,11 @@ export default withRouter((props) => {
 
   const getTranslatedNodeTitle = React.useCallback(
     (node) => {
-      // const term = treeData?.find((item) => item?.key === node?.key);
       return node?.translations
         ? node.translations[languageToShow] || ''
         : node.title || '';
     },
-    [treeData, languageToShow],
+    [languageToShow],
   );
 
   const onSubmit = React.useCallback(() => {
@@ -184,8 +178,6 @@ export default withRouter((props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [treeData, dispatch, request, languages, id, intl]);
 
-  console.log('here', treeData);
-
   return (
     <>
       <Container id="page-taxonomies" className="controlpanel-taxonomies">
@@ -215,11 +207,7 @@ export default withRouter((props) => {
                         <Grid>
                           <Grid.Row>
                             <Grid.Column width={2}>
-                              <div className="select-wrapper">
-                                {/* <label htmlFor={`select-language`}>
-                                  {intl.formatMessage(messages.selectLanguage)}
-                                </label> */}
-                              </div>
+                              <div className="select-wrapper"></div>
                             </Grid.Column>
                             <Grid.Column
                               width={4}
@@ -241,7 +229,6 @@ export default withRouter((props) => {
                             </Grid.Column>
                           </Grid.Row>
                         </Grid>
-                        {/* <TaxonomyData id={id} taxonomy={request} /> */}
                         <div>
                           <SortableTree
                             treeData={treeData}
@@ -339,7 +326,6 @@ export default withRouter((props) => {
                                   value={getTranslatedNodeTitle(node)}
                                   placeholder="Title"
                                   onChange={(event) => {
-                                    // console.log('here path', path, node);
                                     const name = event.target.value;
                                     const newNode = changeNodeAtPath({
                                       treeData,
