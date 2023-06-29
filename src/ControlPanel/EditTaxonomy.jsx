@@ -343,7 +343,8 @@ export default withRouter((props) => {
                                       getNodeKey,
                                       newNode: {
                                         ...node,
-                                        ...(languageToShow === defaultLanguage
+                                        ...(languageToShow ===
+                                        defaultLanguage.code
                                           ? { title: name }
                                           : {}),
                                         translations: {
