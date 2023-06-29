@@ -34,6 +34,7 @@ import SortableTree, {
   removeNodeAtPath,
   changeNodeAtPath,
   getFlatDataFromTree,
+  getNodeAtPath,
 } from 'react-sortable-tree';
 import TaxonomySettings from './TaxonomySettings';
 import './button.less';
@@ -130,9 +131,9 @@ export default withRouter((props) => {
 
   const getTranslatedNodeTitle = React.useCallback(
     (node) => {
-      const term = treeData?.find((item) => item?.key === node?.key);
-      return term?.translations
-        ? term.translations[languageToShow] || ''
+      // const term = treeData?.find((item) => item?.key === node?.key);
+      return node?.translations
+        ? node.translations[languageToShow] || ''
         : node.title || '';
     },
     [treeData, languageToShow],
@@ -182,6 +183,8 @@ export default withRouter((props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [treeData, dispatch, request, languages, id, intl]);
+
+  console.log('here', treeData);
 
   return (
     <>
@@ -336,6 +339,7 @@ export default withRouter((props) => {
                                   value={getTranslatedNodeTitle(node)}
                                   placeholder="Title"
                                   onChange={(event) => {
+                                    // console.log('here path', path, node);
                                     const name = event.target.value;
                                     const newNode = changeNodeAtPath({
                                       treeData,
