@@ -206,13 +206,7 @@ export default withRouter((props) => {
                       <Tab.Pane>
                         <Grid>
                           <Grid.Row>
-                            <Grid.Column width={2}>
-                              <div className="select-wrapper"></div>
-                            </Grid.Column>
-                            <Grid.Column
-                              width={4}
-                              style={{ flexDirection: 'unset' }}
-                            >
+                            <Grid.Column width={4}>
                               <Field
                                 id="language"
                                 title="Language"
