@@ -40,9 +40,14 @@ export default (props) => {
     ];
   });
 
+  console.log('here taxonomy', taxonomy);
+  console.log('here schema', schema);
+
   const formData = {
     field_description: taxonomy?.description,
     field_title: taxonomy?.title,
+    taxonomy_fieldset: taxonomy?.fieldset,
+    field_prefix: taxonomy?.prefix,
     taxonomy: taxonomy?.name,
   };
 
@@ -76,6 +81,8 @@ export default (props) => {
     },
     [dispatch, id, intl],
   );
+
+  console.log('here formData', formData);
 
   return loaded ? (
     <div>
