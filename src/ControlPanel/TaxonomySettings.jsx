@@ -18,11 +18,27 @@ export default (props) => {
   const dispatch = useDispatch();
   const { id } = props.match.params;
   const intl = useIntl();
-  const [taxonomy, schema, loaded] = useSelector((state) => [
-    state.taxonomy?.taxonomy,
-    state.taxonomy?.schema?.schema,
-    state.taxonomy?.schema?.get?.loaded,
-  ]);
+  const [taxonomy, schema, loaded] = useSelector((state) => {
+    return [
+      state.taxonomy?.taxonomy,
+      state.taxonomy?.schema?.schema
+        ? {
+            ...state.taxonomy.schema.schema,
+            properties: {
+              ...state.taxonomy.schema.schema.properties,
+              default_language: {
+                ...(state.taxonomy.schema.schema.properties.default_language ||
+                  {}),
+                vocabulary: {
+                  '@id': 'plone.app.vocabularies.SupportedContentLanguages',
+                },
+              },
+            },
+          }
+        : undefined,
+      state.taxonomy?.schema?.get?.loaded,
+    ];
+  });
 
   const formData = {
     field_description: taxonomy?.description,

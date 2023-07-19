@@ -44,6 +44,7 @@ export default (props) => {
   const taxonomies = useSelector(
     (state) => state.taxonomy?.data?.items ?? state.taxonomy?.data,
   );
+  // const [taxonomies, setTaxonomies] = React.useState(taxonomyList);
   const dispatch = useDispatch();
   const [show, setShow] = React.useState(false);
   const [selected, setSelected] = React.useState([]);
