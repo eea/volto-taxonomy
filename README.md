@@ -14,42 +14,23 @@
 [![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-develop)
 [![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-develop)
 
-[Volto](https://github.com/plone/volto) add-on
+[Volto](https://github.com/plone/volto) add-on for [Taxonomy Vocabularies](https://github.com/collective/collective.taxonomy#taxonomy-vocabularies)
 
 ## Features
 
-Edit collective.taxonomy entries via Volto Site Setup > Taxonomies
+Edit [collective.taxonomy](https://github.com/collective/collective.taxonomy#taxonomy-vocabularies) entries via Volto **Site Setup > Taxonomies**
 
 ## Getting started
-
-### Try volto-taxonomy with Docker
-
-1. Get the latest Docker images
-
-   ```
-   docker pull plone
-   docker pull plone/volto
-   ```
-
-1. Start Plone backend
-
-   ```
-   docker run -d --name plone -p 8080:8080 -e SITE=Plone -e PROFILES="profile-plone.restapi:blocks" plone
-   ```
-
-1. Start Volto frontend
-
-   ```
-   docker run -it --rm -p 3000:3000 --link plone -e ADDONS="@eeacms/volto-taxonomy" plone/volto
-   ```
-
-1. Go to http://localhost:3000
 
 ### Add volto-taxonomy to your Volto project
 
 1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
 
-1. Start Volto frontend
+   ```BASH
+   docker run -it --rm -p 8080:8080 -e ADDONS="collective.taxonomy" -e PROFILES="collective.taxonomy:default" -e SITE=Plone plone/plone-backend
+   ```
+
+1. Start Plone [Volto](https://github.com/plone/volto) frontend
 
 - If you already have a volto project, just update `package.json`:
 
@@ -59,7 +40,7 @@ Edit collective.taxonomy entries via Volto Site Setup > Taxonomies
   ],
 
   "dependencies": {
-      "@eeacms/volto-taxonomy": "^1.0.0"
+      "@eeacms/volto-taxonomy": "^4.0.0"
   }
   ```
 
@@ -78,7 +59,11 @@ Edit collective.taxonomy entries via Volto Site Setup > Taxonomies
    yarn start
    ```
 
-1. Go to http://localhost:3000
+1. Go to [Site Setup > Add-ons](http://localhost:3000/controlpanel/addons)
+
+1. Install **collective.taxonomy**
+
+1. Go to [Site Setup > Taxonomomies](http://localhost:3000/controlpanel/taxonomies)
 
 1. Happy editing!
 
@@ -88,7 +73,7 @@ Edit collective.taxonomy entries via Volto Site Setup > Taxonomies
 
 - [Plone](https://plone.org/download)
 - [plone.restapi](https://pypi.org/project/plone.restapi/)
-- [eea.api.taxonomy](https://pypi.org/project/eea.api.taxonomy)
+- [collective.taxonomy](https://pypi.org/project/collective.taxonomy/)
 
 ### Frontend
 
