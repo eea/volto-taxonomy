@@ -8,6 +8,7 @@ import {
   Input,
   Menu,
   Message,
+  Grid,
 } from 'semantic-ui-react';
 import { Helmet } from '@plone/volto/helpers';
 import { toast } from 'react-toastify';
@@ -15,7 +16,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { Icon, Toolbar, Toast } from '@plone/volto/components';
+import { Field } from '@plone/volto/components';
 import { Portal } from 'react-portal';
+import config from '@plone/volto/registry';
 import { defineMessages, useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import backSVG from '@plone/volto/icons/back.svg';
@@ -88,25 +91,47 @@ export default withRouter((props) => {
   const dispatch = useDispatch();
   const request = useSelector((state) => state.taxonomy?.taxonomy);
   const intl = useIntl();
-
-  const languages = request?.languages || [request?.default_language];
-
   const [treeData, setTreeData] = React.useState(null);
+
+  const [languageToShow, setLanguage] = React.useState(null);
+
+  const languages = [languageToShow] || [request?.default_language];
+
+  const defaultLanguage = config.settings.languages.find(
+    (lang) => lang.code === request?.default_language,
+  );
 
   React.useEffect(() => {
     if (request) setTreeData(request?.tree);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [request]);
 
-  const getNodeKey = ({ treeIndex }) => treeIndex;
-
   React.useEffect(() => {
     dispatch(getTaxonomy(id));
   }, [id, dispatch]);
 
+  React.useEffect(() => {
+    setLanguage(defaultLanguage?.code);
+  }, [defaultLanguage]);
+
+  const getNodeKey = ({ treeIndex }) => treeIndex;
+
   const onChange = (data) => {
     setTreeData(data);
   };
+
+  const handleLanguageChange = React.useCallback((_, value) => {
+    setLanguage(value);
+  }, []);
+
+  const getTranslatedNodeTitle = React.useCallback(
+    (node) => {
+      return node?.translations
+        ? node.translations[languageToShow] || ''
+        : node.title || '';
+    },
+    [languageToShow],
+  );
 
   const onSubmit = React.useCallback(() => {
     const flatdata = getFlatDataFromTree({
@@ -179,7 +204,25 @@ export default withRouter((props) => {
                     menuItem: 'Edit taxonomy data',
                     render: () => (
                       <Tab.Pane>
-                        {/* <TaxonomyData id={id} taxonomy={request} /> */}
+                        <Grid>
+                          <Grid.Row>
+                            <Grid.Column width={4}>
+                              <Field
+                                id="language"
+                                title="Language"
+                                default={defaultLanguage?.code}
+                                widget="select"
+                                type="string"
+                                vocabulary={{
+                                  '@id':
+                                    'plone.app.vocabularies.SupportedContentLanguages',
+                                }}
+                                value={languageToShow}
+                                onChange={handleLanguageChange}
+                              />
+                            </Grid.Column>
+                          </Grid.Row>
+                        </Grid>
                         <div>
                           <SortableTree
                             treeData={treeData}
@@ -274,18 +317,24 @@ export default withRouter((props) => {
                               title: (
                                 <Input
                                   style={{ fontSize: '1rem' }}
-                                  value={node.title}
+                                  value={getTranslatedNodeTitle(node)}
                                   placeholder="Title"
                                   onChange={(event) => {
                                     const name = event.target.value;
-
                                     const newNode = changeNodeAtPath({
                                       treeData,
                                       path,
                                       getNodeKey,
                                       newNode: {
                                         ...node,
-                                        title: name,
+                                        ...(languageToShow ===
+                                        defaultLanguage.code
+                                          ? { title: name }
+                                          : {}),
+                                        translations: {
+                                          ...node.translations,
+                                          [languageToShow]: name,
+                                        },
                                       },
                                     });
                                     setTreeData(newNode);
