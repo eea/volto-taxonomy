@@ -22,9 +22,22 @@ Edit [collective.taxonomy](https://github.com/collective/collective.taxonomy#tax
 
 ## Getting started
 
+### Try volto-taxonomy with Docker
+
+      git clone https://github.com/eea/volto-taxonomy.git
+      cd volto-taxonomy
+      make
+      make start
+
+Go to http://localhost:3000
+
 ### Add volto-taxonomy to your Volto project
 
 1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
+
+   ```Bash
+   docker compose up backend
+   ```
 
    ```BASH
    docker run -it --rm -p 8080:8080 -e ADDONS="collective.taxonomy" -e PROFILES="collective.taxonomy:default" -e SITE=Plone plone/plone-backend
