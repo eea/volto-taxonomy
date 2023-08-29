@@ -11,4 +11,81 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Add child node
+msgid "Add child node"
+msgstr ""
 
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Add node at same level
+msgid "Add node at same level"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+#: ControlPanel/TaxonomySettings
+# defaultMessage: Changes saved
+msgid "Changes saved"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Count
+msgid "Count"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Delete node
+msgid "Delete node"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Do you really want to delete the following taxonomies?
+msgid "Do you really want to delete the following taxonomies?"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Duplicated Ids present
+msgid "Duplicated Ids"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+#: ControlPanel/Taxonomies
+# defaultMessage: Error
+msgid "Error"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Please add a new taxonomy entry
+msgid "Please add a new taxonomy entry"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Select
+msgid "Select"
+msgstr ""
+
+#: ControlPanel/AddTaxonomy
+#: ControlPanel/EditTaxonomy
+#: ControlPanel/Taxonomies
+# defaultMessage: Success
+msgid "Success"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Taxonomies Deleted
+msgid "Taxonomies Deleted"
+msgstr ""
+
+#: ControlPanel/AddTaxonomy
+# defaultMessage: Taxonomy Added Successfully
+msgid "Taxonomy Added Successfully"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Type
+msgid "Type"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Duplicated Ids present, use unique ids in order to save these changes.
+msgid "duplicatedIdContent"
+msgstr ""

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2023-06-28T10:48:22.678Z\n"
+"POT-Creation-Date: 2023-08-29T17:15:25.557Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -13,4 +13,81 @@ msgstr ""
 "Preferred-Encodings: utf-8\n"
 "Domain: volto\n"
 
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Add child node
+msgid "Add child node"
+msgstr ""
 
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Add node at same level
+msgid "Add node at same level"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+#: ControlPanel/TaxonomySettings
+# defaultMessage: Changes saved
+msgid "Changes saved"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Count
+msgid "Count"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Delete node
+msgid "Delete node"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Do you really want to delete the following taxonomies?
+msgid "Do you really want to delete the following taxonomies?"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Duplicated Ids present
+msgid "Duplicated Ids"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+#: ControlPanel/Taxonomies
+# defaultMessage: Error
+msgid "Error"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Please add a new taxonomy entry
+msgid "Please add a new taxonomy entry"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Select
+msgid "Select"
+msgstr ""
+
+#: ControlPanel/AddTaxonomy
+#: ControlPanel/EditTaxonomy
+#: ControlPanel/Taxonomies
+# defaultMessage: Success
+msgid "Success"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Taxonomies Deleted
+msgid "Taxonomies Deleted"
+msgstr ""
+
+#: ControlPanel/AddTaxonomy
+# defaultMessage: Taxonomy Added Successfully
+msgid "Taxonomy Added Successfully"
+msgstr ""
+
+#: ControlPanel/Taxonomies
+# defaultMessage: Type
+msgid "Type"
+msgstr ""
+
+#: ControlPanel/EditTaxonomy
+# defaultMessage: Duplicated Ids present, use unique ids in order to save these changes.
+msgid "duplicatedIdContent"
+msgstr ""
