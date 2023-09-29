@@ -20,6 +20,18 @@
 
 Edit [collective.taxonomy](https://github.com/collective/collective.taxonomy#taxonomy-vocabularies) entries via Volto **Site Setup > Taxonomies**
 
+## Dependencies
+
+### Backend
+
+- [Plone](https://plone.org/download)
+- [plone.restapi](https://pypi.org/project/plone.restapi/)
+- [collective.taxonomy](https://pypi.org/project/collective.taxonomy/)
+
+### Frontend
+
+- [Volto](https://github.com/plone/volto)
+
 ## Getting started
 
 ### Try volto-taxonomy with Docker
@@ -39,31 +51,27 @@ Go to http://localhost:3000
    docker compose up backend
    ```
 
-   ```BASH
-   docker run -it --rm -p 8080:8080 -e ADDONS="collective.taxonomy" -e PROFILES="collective.taxonomy:default" -e SITE=Plone plone/plone-backend
+1. Start Volto frontend
+
+* If you already have a volto project, just update `package.json`:
+
+   ```JSON
+   "addons": [
+       "@eeacms/volto-taxonomy"
+   ],
+
+   "dependencies": {
+       "@eeacms/volto-taxonomy": "*"
+   }
    ```
 
-1. Start Plone [Volto](https://github.com/plone/volto) frontend
+* If not, create one:
 
-- If you already have a volto project, just update `package.json`:
-
-  ```JSON
-  "addons": [
-      "@eeacms/volto-taxonomy"
-  ],
-
-  "dependencies": {
-      "@eeacms/volto-taxonomy": "^4.0.0"
-  }
-  ```
-
-- If not, create one:
-
-  ```
-  npm install -g yo @plone/generator-volto
-  yo @plone/volto my-volto-project --addon @eeacms/volto-taxonomy
-  cd my-volto-project
-  ```
+   ```
+   npm install -g yo @plone/generator-volto
+   yo @plone/volto my-volto-project --canary --addon @eeacms/volto-taxonomy
+   cd my-volto-project
+   ```
 
 1. Install new add-ons and restart Volto:
 
@@ -72,25 +80,9 @@ Go to http://localhost:3000
    yarn start
    ```
 
-1. Go to [Site Setup > Add-ons](http://localhost:3000/controlpanel/addons)
-
-1. Install **collective.taxonomy**
-
-1. Go to [Site Setup > Taxonomomies](http://localhost:3000/controlpanel/taxonomies)
+1. Go to http://localhost:3000
 
 1. Happy editing!
-
-## Dependencies
-
-### Backend
-
-- [Plone](https://plone.org/download)
-- [plone.restapi](https://pypi.org/project/plone.restapi/)
-- [collective.taxonomy](https://pypi.org/project/collective.taxonomy/)
-
-### Frontend
-
-- [Volto](https://github.com/plone/volto)
 
 ## Release
 
