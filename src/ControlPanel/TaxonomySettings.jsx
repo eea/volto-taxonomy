@@ -33,6 +33,7 @@ const removeFields = (schema, fields = []) => {
   return newSchema;
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (props) => {
   const dispatch = useDispatch();
   const { id } = props.match.params;
