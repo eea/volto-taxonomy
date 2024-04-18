@@ -39,8 +39,7 @@ const messages = defineMessages({
   },
 });
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default (props) => {
+const Taxonomies = (props) => {
   const intl = useIntl();
   const taxonomies = useSelector(
     (state) => state.taxonomy?.data?.items ?? state.taxonomy?.data,
@@ -223,3 +222,5 @@ export default (props) => {
     </Container>
   );
 };
+
+export default Taxonomies;
