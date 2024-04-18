@@ -33,7 +33,7 @@ const removeFields = (schema, fields = []) => {
   return newSchema;
 };
 
-export default (props) => {
+const TaxonomySettings = (props) => {
   const dispatch = useDispatch();
   const { id } = props.match.params;
   const intl = useIntl();
@@ -112,3 +112,5 @@ export default (props) => {
     </div>
   ) : null;
 };
+
+export default TaxonomySettings;

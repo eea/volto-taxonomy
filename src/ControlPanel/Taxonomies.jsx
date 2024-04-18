@@ -39,7 +39,7 @@ const messages = defineMessages({
   },
 });
 
-export default (props) => {
+const Taxonomies = (props) => {
   const intl = useIntl();
   const taxonomies = useSelector(
     (state) => state.taxonomy?.data?.items ?? state.taxonomy?.data,
@@ -222,3 +222,5 @@ export default (props) => {
     </Container>
   );
 };
+
+export default Taxonomies;
