@@ -95,10 +95,6 @@ export default withRouter((props) => {
 
   const [languageToShow, setLanguage] = React.useState(null);
 
-  const languages = languageToShow
-    ? [languageToShow]
-    : [request?.default_language];
-
   const defaultLanguage = config.settings.languages.find(
     (lang) => lang.code === request?.default_language,
   );
@@ -136,6 +132,9 @@ export default withRouter((props) => {
   );
 
   const onSubmit = React.useCallback(() => {
+    const languages = languageToShow
+      ? [languageToShow]
+      : [request?.default_language];
     const flatdata = getFlatDataFromTree({
       treeData,
       getNodeKey,
@@ -178,7 +177,7 @@ export default withRouter((props) => {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [treeData, dispatch, request, languages, id, intl]);
+  }, [treeData, dispatch, request, languageToShow, id, intl]);
 
   return (
     <>
