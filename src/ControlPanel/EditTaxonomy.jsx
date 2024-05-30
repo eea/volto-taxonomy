@@ -88,7 +88,6 @@ export default withRouter((props) => {
   const intl = useIntl();
   const [treeData, setTreeData] = React.useState(null);
   const [sortableTreeLib, setSortableTreeLib] = React.useState(null);
-  console.log('SortableTree', SortableTree);
 
   const [languageToShow, setLanguage] = React.useState(null);
 
