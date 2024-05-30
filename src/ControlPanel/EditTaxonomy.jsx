@@ -28,15 +28,10 @@ import addSVG from '@plone/volto/icons/add.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
 import navSVG from '@plone/volto/icons/nav.svg';
 import { getTaxonomy, updateTaxonomy } from '../actions';
-
-import SortableTree, {
-  addNodeUnderParent,
-  removeNodeAtPath,
-  changeNodeAtPath,
-  getFlatDataFromTree,
-} from 'react-sortable-tree';
+import loadable from '@loadable/component';
 import TaxonomySettings from './TaxonomySettings';
-import './button.less';
+
+const SortableTree = loadable(() => import('react-sortable-tree'));
 
 const messages = defineMessages({
   saved: {
@@ -92,6 +87,7 @@ export default withRouter((props) => {
   const request = useSelector((state) => state.taxonomy?.taxonomy);
   const intl = useIntl();
   const [treeData, setTreeData] = React.useState(null);
+  const [sortableTreeLib, setSortableTreeLib] = React.useState(null);
 
   const [languageToShow, setLanguage] = React.useState(null);
 
@@ -107,6 +103,19 @@ export default withRouter((props) => {
   React.useEffect(() => {
     dispatch(getTaxonomy(id));
   }, [id, dispatch]);
+
+  React.useEffect(() => {
+    // lazy load react-sortable-tree
+    import(
+      /* webpackChunkName: "taxonomy-edit-tree" */ 'react-sortable-tree/style.css'
+    );
+    import(/* webpackChunkName: "taxonomy-edit-tree" */ './button.less');
+    import(
+      /* webpackChunkName: "react-sortable-tree" */ 'react-sortable-tree'
+    ).then((module) => {
+      setSortableTreeLib(module);
+    });
+  }, []);
 
   React.useEffect(() => {
     setLanguage(defaultLanguage?.code);
@@ -135,7 +144,7 @@ export default withRouter((props) => {
     const languages = languageToShow
       ? [languageToShow]
       : [request?.default_language];
-    const flatdata = getFlatDataFromTree({
+    const flatdata = sortableTreeLib.getFlatDataFromTree({
       treeData,
       getNodeKey,
     });
@@ -244,16 +253,17 @@ export default withRouter((props) => {
                                     messages.addChildNode,
                                   )}
                                   onClick={() => {
-                                    const insertNode = addNodeUnderParent({
-                                      treeData,
-                                      parentKey: path[path.length - 1],
-                                      expandParent: true,
-                                      getNodeKey,
-                                      newNode: {
-                                        title: ``,
-                                        key: uuid(),
-                                      },
-                                    });
+                                    const insertNode =
+                                      sortableTreeLib.addNodeUnderParent({
+                                        treeData,
+                                        parentKey: path[path.length - 1],
+                                        expandParent: true,
+                                        getNodeKey,
+                                        newNode: {
+                                          title: ``,
+                                          key: uuid(),
+                                        },
+                                      });
                                     setTreeData(insertNode.treeData);
                                   }}
                                 >
@@ -269,11 +279,12 @@ export default withRouter((props) => {
                                   icon
                                   as={Button}
                                   onClick={() => {
-                                    const removedNode = removeNodeAtPath({
-                                      treeData,
-                                      path,
-                                      getNodeKey,
-                                    });
+                                    const removedNode =
+                                      sortableTreeLib.removeNodeAtPath({
+                                        treeData,
+                                        path,
+                                        getNodeKey,
+                                      });
                                     setTreeData(removedNode);
                                   }}
                                 >
@@ -293,16 +304,17 @@ export default withRouter((props) => {
                                   )}
                                   as={Button}
                                   onClick={() => {
-                                    const insertNode = addNodeUnderParent({
-                                      treeData,
-                                      parentKey: path[path.length - 2],
-                                      expandParent: true,
-                                      getNodeKey,
-                                      newNode: {
-                                        title: ``,
-                                        key: uuid(),
-                                      },
-                                    });
+                                    const insertNode =
+                                      sortableTreeLib.addNodeUnderParent({
+                                        treeData,
+                                        parentKey: path[path.length - 2],
+                                        expandParent: true,
+                                        getNodeKey,
+                                        newNode: {
+                                          title: ``,
+                                          key: uuid(),
+                                        },
+                                      });
                                     setTreeData(insertNode.treeData);
                                   }}
                                 >
@@ -322,22 +334,23 @@ export default withRouter((props) => {
                                   placeholder="Title"
                                   onChange={(event) => {
                                     const name = event.target.value;
-                                    const newNode = changeNodeAtPath({
-                                      treeData,
-                                      path,
-                                      getNodeKey,
-                                      newNode: {
-                                        ...node,
-                                        ...(languageToShow ===
-                                        defaultLanguage.code
-                                          ? { title: name }
-                                          : {}),
-                                        translations: {
-                                          ...node.translations,
-                                          [languageToShow]: name,
+                                    const newNode =
+                                      sortableTreeLib.changeNodeAtPath({
+                                        treeData,
+                                        path,
+                                        getNodeKey,
+                                        newNode: {
+                                          ...node,
+                                          ...(languageToShow ===
+                                          defaultLanguage.code
+                                            ? { title: name }
+                                            : {}),
+                                          translations: {
+                                            ...node.translations,
+                                            [languageToShow]: name,
+                                          },
                                         },
-                                      },
-                                    });
+                                      });
                                     setTreeData(newNode);
                                   }}
                                 />
@@ -350,15 +363,16 @@ export default withRouter((props) => {
                                   onChange={(event) => {
                                     const id = event.target.value;
 
-                                    const newNode = changeNodeAtPath({
-                                      treeData,
-                                      path,
-                                      getNodeKey,
-                                      newNode: {
-                                        ...node,
-                                        key: id,
-                                      },
-                                    });
+                                    const newNode =
+                                      sortableTreeLib.changeNodeAtPath({
+                                        treeData,
+                                        path,
+                                        getNodeKey,
+                                        newNode: {
+                                          ...node,
+                                          key: id,
+                                        },
+                                      });
                                     setTreeData(newNode);
                                   }}
                                 />
