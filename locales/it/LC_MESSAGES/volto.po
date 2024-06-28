@@ -14,18 +14,18 @@ msgstr ""
 #: ControlPanel/EditTaxonomy
 # defaultMessage: Add child node
 msgid "Add child node"
-msgstr ""
+msgstr "Aggiungi nodo figlio"
 
 #: ControlPanel/EditTaxonomy
 # defaultMessage: Add node at same level
 msgid "Add node at same level"
-msgstr ""
+msgstr "Aggiungi nodo allo stesso livello"
 
 #: ControlPanel/EditTaxonomy
 #: ControlPanel/TaxonomySettings
 # defaultMessage: Changes saved
 msgid "Changes saved"
-msgstr ""
+msgstr "Modifiche salvate"
 
 #: ControlPanel/Taxonomies
 # defaultMessage: Count
@@ -35,57 +35,57 @@ msgstr ""
 #: ControlPanel/EditTaxonomy
 # defaultMessage: Delete node
 msgid "Delete node"
-msgstr ""
+msgstr "Elimina nodo"
 
 #: ControlPanel/Taxonomies
 # defaultMessage: Do you really want to delete the following taxonomies?
 msgid "Do you really want to delete the following taxonomies?"
-msgstr ""
+msgstr "Vuoi davvero eliminare le seguenti tassonomie?"
 
 #: ControlPanel/EditTaxonomy
 # defaultMessage: Duplicated Ids present
 msgid "Duplicated Ids"
-msgstr ""
+msgstr "ID duplicati presenti"
 
 #: ControlPanel/EditTaxonomy
 #: ControlPanel/Taxonomies
 # defaultMessage: Error
 msgid "Error"
-msgstr ""
+msgstr "Errore"
 
 #: ControlPanel/EditTaxonomy
 # defaultMessage: Please add a new taxonomy entry
 msgid "Please add a new taxonomy entry"
-msgstr ""
+msgstr "Aggiungi una nuova voce di tassonomia"
 
 #: ControlPanel/Taxonomies
 # defaultMessage: Select
 msgid "Select"
-msgstr ""
+msgstr "Seleziona"
 
 #: ControlPanel/AddTaxonomy
 #: ControlPanel/EditTaxonomy
 #: ControlPanel/Taxonomies
 # defaultMessage: Success
 msgid "Success"
-msgstr ""
+msgstr "Successo"
 
 #: ControlPanel/Taxonomies
 # defaultMessage: Taxonomies Deleted
 msgid "Taxonomies Deleted"
-msgstr ""
+msgstr "Tassonomie eliminate"
 
 #: ControlPanel/AddTaxonomy
 # defaultMessage: Taxonomy Added Successfully
 msgid "Taxonomy Added Successfully"
-msgstr ""
+msgstr "Tassonomia aggiunta con successo"
 
 #: ControlPanel/Taxonomies
 # defaultMessage: Type
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: ControlPanel/EditTaxonomy
 # defaultMessage: Duplicated Ids present, use unique ids in order to save these changes.
 msgid "duplicatedIdContent"
-msgstr ""
+msgstr "ID duplicati presenti, usa ID unici per salvare queste modifiche."
