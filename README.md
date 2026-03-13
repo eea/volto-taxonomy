@@ -61,13 +61,15 @@ Go to http://localhost:3000
 * If you already have a volto project, just update `package.json`:
 
    ```JSON
-   "addons": [
-       "@eeacms/volto-taxonomy"
-   ],
-
    "dependencies": {
        "@eeacms/volto-taxonomy": "*"
    }
+   ```
+
+   and `volto.config.js`:
+
+   ```JavaScript
+   const addons = ['@eeacms/volto-taxonomy'];
    ```
 
 * If not, create one with Cookieplone, as recommended by the official Plone documentation for Volto 18+:
