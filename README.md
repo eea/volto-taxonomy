@@ -3,16 +3,16 @@
 [![Releases](https://img.shields.io/github/v/release/eea/volto-taxonomy)](https://github.com/eea/volto-taxonomy/releases)
 
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-taxonomy%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-taxonomy/job/master/display/redirect)
-[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-master&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-master)
-[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-master&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-master)
-[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-master&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-master)
-[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-master&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-master)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy)
 
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-taxonomy%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-taxonomy/job/develop/display/redirect)
-[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-develop)
-[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-develop)
-[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-develop)
-[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy-develop)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy&branch=develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy&branch=develop)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy&branch=develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy&branch=develop)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy&branch=develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy&branch=develop)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-taxonomy&branch=develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-taxonomy&branch=develop)
 
 [Volto](https://github.com/plone/volto) add-on for [Taxonomy Vocabularies](https://github.com/collective/collective.taxonomy#taxonomy-vocabularies)
 
@@ -43,6 +43,11 @@ Edit [collective.taxonomy](https://github.com/collective/collective.taxonomy#tax
 
 Go to http://localhost:3000
 
+`make start` now defaults to Volto 18. To run the same setup against Volto 17, use:
+
+      VOLTO_VERSION=17 make
+      VOLTO_VERSION=17 make start
+
 ### Add volto-taxonomy to your Volto project
 
 1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
@@ -56,29 +61,38 @@ Go to http://localhost:3000
 * If you already have a volto project, just update `package.json`:
 
    ```JSON
-   "addons": [
-       "@eeacms/volto-taxonomy"
-   ],
-
    "dependencies": {
        "@eeacms/volto-taxonomy": "*"
    }
    ```
 
-* If not, create one:
+   and `volto.config.js`:
 
-   ```
-   npm install -g yo @plone/generator-volto
-   yo @plone/volto my-volto-project --canary --addon @eeacms/volto-taxonomy
-   cd my-volto-project
+   ```JavaScript
+   const addons = ['@eeacms/volto-taxonomy'];
    ```
 
-1. Install new add-ons and restart Volto:
+* If not, create one with Cookieplone, as recommended by the official Plone documentation for Volto 18+:
 
    ```
-   yarn
-   yarn start
+   uvx cookieplone project
+   cd project-title
    ```
+
+1. Install or update dependencies, then start the project:
+
+   ```
+   make install
+   ```
+
+   For a Cookieplone project, start the backend and frontend in separate terminals:
+
+   ```
+   make backend-start
+   make frontend-start
+   ```
+
+   For a legacy Volto 17 project, install the package with `yarn` and restart the frontend as usual.
 
 1. Go to http://localhost:3000
 
