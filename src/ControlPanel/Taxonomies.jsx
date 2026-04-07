@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { map, includes, pull } from 'lodash';
+import map from 'lodash/map';
+import includes from 'lodash/includes';
+import pull from 'lodash/pull';
 import {
   Container,
   Header,
@@ -10,10 +12,12 @@ import {
   Confirm,
   Checkbox,
 } from 'semantic-ui-react';
-import { Helmet } from '@plone/volto/helpers';
+import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 import { toast } from 'react-toastify';
 import { defineMessages, useIntl, FormattedMessage } from 'react-intl';
-import { Icon, Toolbar, Toast } from '@plone/volto/components';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
+import Toolbar from '@plone/volto/components/manage/Toolbar/Toolbar';
+import Toast from '@plone/volto/components/manage/Toast/Toast';
 import { Link } from 'react-router-dom';
 import { Portal } from 'react-portal';
 
