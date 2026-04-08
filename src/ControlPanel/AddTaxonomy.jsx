@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import Toast from '@plone/volto/components/manage/Toast/Toast';
 import { ModalForm } from '@plone/volto/components/manage/Form';
 import { defineMessages, useIntl } from 'react-intl';
-import { getTaxonomySchema, addTaxonomy } from '../actions';
+import { getTaxonomySchema, addTaxonomy } from '@eeacms/volto-taxonomy/actions';
 
 const messages = defineMessages({
   added: {

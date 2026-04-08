@@ -6,7 +6,10 @@ import { toast } from 'react-toastify';
 import { messages } from '@plone/volto/helpers/MessageLabels/MessageLabels';
 import Toast from '@plone/volto/components/manage/Toast/Toast';
 import { Form } from '@plone/volto/components/manage/Form';
-import { getTaxonomySchema, updateTaxonomy } from '../actions';
+import {
+  getTaxonomySchema,
+  updateTaxonomy,
+} from '@eeacms/volto-taxonomy/actions';
 import { defineMessages, useIntl } from 'react-intl';
 
 const customMessages = defineMessages({

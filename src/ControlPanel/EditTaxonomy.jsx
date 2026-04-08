@@ -29,7 +29,7 @@ import addDocumentSVG from '@plone/volto/icons/add-document.svg';
 import addSVG from '@plone/volto/icons/add.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
 import navSVG from '@plone/volto/icons/nav.svg';
-import { getTaxonomy, updateTaxonomy } from '../actions';
+import { getTaxonomy, updateTaxonomy } from '@eeacms/volto-taxonomy/actions';
 import loadable from '@loadable/component';
 import TaxonomySettings from './TaxonomySettings';
 

@@ -26,7 +26,7 @@ import cicleAddSvg from '@plone/volto/icons/circle-plus.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 
 import AddTaxonomy from './AddTaxonomy';
-import { deleteTaxonomy, listTaxonomies } from '../actions';
+import { deleteTaxonomy, listTaxonomies } from '@eeacms/volto-taxonomy/actions';
 
 const messages = defineMessages({
   delete: {

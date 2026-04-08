@@ -6,7 +6,7 @@ import configureStore from 'redux-mock-store';
 import TaxonomySettings from './TaxonomySettings';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-intl-redux';
-import * as reducers from '../reducers';
+import * as reducers from '@eeacms/volto-taxonomy/reducers';
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
@@ -21,7 +21,7 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
-jest.mock('../reducers', () => ({
+jest.mock('@eeacms/volto-taxonomy/reducers', () => ({
   getTaxonomySchema: jest.fn().mockReturnValue({
     type: 'GET_TAXONOMYSCHEMA_SUCCESS',
     result: {
