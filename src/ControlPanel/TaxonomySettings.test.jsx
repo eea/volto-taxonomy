@@ -20,6 +20,17 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
+jest.mock('@eeacms/volto-taxonomy/actions', () => ({
+  getTaxonomySchema: jest.fn().mockReturnValue({
+    type: 'GET_TAXONOMYSCHEMA',
+    request: {
+      op: 'get',
+      path: '/@taxonomySchema',
+      headers: { Accept: 'application/json' },
+    },
+  }),
+}));
+
 jest.mock('@plone/volto/components/manage/Form/Form', () => ({
   __esModule: true,
   default: jest.fn(({ formData, schema, onSubmit }) => {
