@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { messages } from '@plone/volto/helpers/MessageLabels/MessageLabels';
 import Toast from '@plone/volto/components/manage/Toast/Toast';
-import { Form } from '@plone/volto/components/manage/Form';
+import Form from '@plone/volto/components/manage/Form/Form';
 import {
   getTaxonomySchema,
   updateTaxonomy,
