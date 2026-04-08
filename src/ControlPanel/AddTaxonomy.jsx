@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Toast from '@plone/volto/components/manage/Toast/Toast';
-import { ModalForm } from '@plone/volto/components/manage/Form';
+import ModalForm from '@plone/volto/components/manage/Form/ModalForm';
 import { defineMessages, useIntl } from 'react-intl';
 import { getTaxonomySchema, addTaxonomy } from '../actions';
 

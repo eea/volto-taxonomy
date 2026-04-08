@@ -18,7 +18,7 @@ import { v4 as uuid } from 'uuid';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import Toolbar from '@plone/volto/components/manage/Toolbar/Toolbar';
 import Toast from '@plone/volto/components/manage/Toast/Toast';
-import { Field } from '@plone/volto/components/manage/Form';
+import Field from '@plone/volto/components/manage/Form/Field';
 import { Portal } from 'react-portal';
 import config from '@plone/volto/registry';
 import { defineMessages, useIntl } from 'react-intl';

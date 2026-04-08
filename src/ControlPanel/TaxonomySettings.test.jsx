@@ -6,7 +6,6 @@ import configureStore from 'redux-mock-store';
 import TaxonomySettings from './TaxonomySettings';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-intl-redux';
-import * as reducers from '../reducers';
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
@@ -21,17 +20,9 @@ jest.mock('react-toastify', () => ({
   },
 }));
 
-jest.mock('../reducers', () => ({
-  getTaxonomySchema: jest.fn().mockReturnValue({
-    type: 'GET_TAXONOMYSCHEMA_SUCCESS',
-    result: {
-      fieldsets: [{ fields: ['field_description', 'field_title', 'taxonomy'] }],
-    },
-  }),
-}));
-
-jest.mock('@plone/volto/components', () => ({
-  Form: jest.fn(({ formData, schema, onSubmit }) => {
+jest.mock('@plone/volto/components/manage/Form/Form', () => ({
+  __esModule: true,
+  default: jest.fn(({ formData, schema, onSubmit }) => {
     const handleSubmit = (e) => {
       e.preventDefault();
       onSubmit(formData);
@@ -61,30 +52,33 @@ const store = mockStore({
   },
 });
 
-const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
-useSelectorMock.mockReturnValue([
-  { description: 'desc', title: 'title', name: 'name' },
-  {
-    fieldsets: [{ fields: ['field_description', 'field_title', 'taxonomy'] }],
-  },
-  true,
-]);
-
-const getTaxonomySchemaMock = jest.spyOn(reducers, 'getTaxonomySchema');
-getTaxonomySchemaMock.mockReturnValue({
-  schema: {
-    fieldsets: [{ fields: ['field_description', 'field_title', 'taxonomy'] }],
-  },
-});
-
-const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch');
 const dispatchMock = jest.fn();
-useDispatchMock.mockReturnValue(dispatchMock);
 
 describe('TaxonomySettings', () => {
+  const useDispatchMock = reactRedux.useDispatch;
+  const useSelectorMock = reactRedux.useSelector;
+
+  beforeEach(() => {
+    useDispatchMock.mockReturnValue(dispatchMock);
+    useSelectorMock.mockReset();
+    dispatchMock.mockClear();
+  });
+
   it('renders correctly and does not dispatch action when schema is available', async () => {
     const match = { params: { id: '1' } };
     const history = createMemoryHistory();
+    useSelectorMock
+      .mockReturnValueOnce({
+        description: 'desc',
+        title: 'title',
+        name: 'name',
+      })
+      .mockReturnValueOnce({
+        fieldsets: [
+          { fields: ['field_description', 'field_title', 'taxonomy'] },
+        ],
+      })
+      .mockReturnValueOnce(true);
 
     render(
       <Provider store={store}>
@@ -95,20 +89,21 @@ describe('TaxonomySettings', () => {
     );
 
     await waitFor(() => {
-      expect(dispatchMock).not.toHaveBeenCalledWith(getTaxonomySchemaMock());
+      expect(dispatchMock).not.toHaveBeenCalled();
     });
   });
 
   it('renders correctly and dispatches action when schema is not available', async () => {
     const match = { params: { id: '1' } };
     const history = createMemoryHistory();
-
-    const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
-    useSelectorMock.mockReturnValue([
-      { description: 'desc', title: 'title', name: 'name' },
-      undefined,
-      true,
-    ]);
+    useSelectorMock
+      .mockReturnValueOnce({
+        description: 'desc',
+        title: 'title',
+        name: 'name',
+      })
+      .mockReturnValueOnce(undefined)
+      .mockReturnValueOnce(true);
 
     render(
       <Provider store={store}>
