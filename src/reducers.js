@@ -6,7 +6,8 @@ import {
   LIST_TAXONOMIES,
   DELETE_TAXONOMY,
 } from './constants';
-import { differenceBy, map } from 'lodash';
+import differenceBy from 'lodash/differenceBy';
+import map from 'lodash/map';
 
 const initialState = {};
 

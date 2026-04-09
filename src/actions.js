@@ -6,7 +6,7 @@ import {
   LIST_TAXONOMIES,
   DELETE_TAXONOMY,
 } from './constants';
-import { nestContent } from '@plone/volto/helpers';
+import { nestContent } from '@plone/volto/helpers/Content/Content';
 
 export function updateTaxonomy(name, content) {
   return {

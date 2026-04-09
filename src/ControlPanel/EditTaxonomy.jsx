@@ -10,13 +10,15 @@ import {
   Message,
   Grid,
 } from 'semantic-ui-react';
-import { Helmet } from '@plone/volto/helpers';
+import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { Icon, Toolbar, Toast } from '@plone/volto/components';
-import { Field } from '@plone/volto/components';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
+import Toolbar from '@plone/volto/components/manage/Toolbar/Toolbar';
+import Toast from '@plone/volto/components/manage/Toast/Toast';
+import Field from '@plone/volto/components/manage/Form/Field';
 import { Portal } from 'react-portal';
 import config from '@plone/volto/registry';
 import { defineMessages, useIntl } from 'react-intl';
@@ -27,7 +29,7 @@ import addDocumentSVG from '@plone/volto/icons/add-document.svg';
 import addSVG from '@plone/volto/icons/add.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
 import navSVG from '@plone/volto/icons/nav.svg';
-import { getTaxonomy, updateTaxonomy } from '../actions';
+import { getTaxonomy, updateTaxonomy } from '@eeacms/volto-taxonomy/actions';
 import loadable from '@loadable/component';
 import TaxonomySettings from './TaxonomySettings';
 
@@ -247,6 +249,7 @@ export default withRouter((props) => {
                             }) => ({
                               buttons: [
                                 <Menu.Item
+                                  key="add-child-node"
                                   icon
                                   as={Button}
                                   name={intl.formatMessage(
@@ -276,6 +279,7 @@ export default withRouter((props) => {
                                   />
                                 </Menu.Item>,
                                 <Menu.Item
+                                  key="delete-node"
                                   icon
                                   as={Button}
                                   onClick={() => {
@@ -298,6 +302,7 @@ export default withRouter((props) => {
                                   />
                                 </Menu.Item>,
                                 <Menu.Item
+                                  key="add-same-level"
                                   icon
                                   name={intl.formatMessage(
                                     messages.addSameLevel,
@@ -342,7 +347,7 @@ export default withRouter((props) => {
                                         newNode: {
                                           ...node,
                                           ...(languageToShow ===
-                                          defaultLanguage.code
+                                          defaultLanguage?.code
                                             ? { title: name }
                                             : {}),
                                           translations: {

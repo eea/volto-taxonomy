@@ -20,8 +20,9 @@ jest.mock('react-toastify', () => ({
 
 const mockStore = configureStore([]);
 
-jest.mock('@plone/volto/components', () => ({
-  ModalForm: jest.fn(() => {
+jest.mock('@plone/volto/components/manage/Form/ModalForm', () => ({
+  __esModule: true,
+  default: jest.fn(() => {
     return <div>Modal Form</div>;
   }),
 }));
@@ -48,27 +49,28 @@ const store = mockStore({
   },
 });
 
-const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch');
 const dispatchMock = jest.fn();
-useDispatchMock.mockReturnValue(dispatchMock);
 
 describe('AddTaxonomy', () => {
+  const useDispatchMock = reactRedux.useDispatch;
+  const useSelectorMock = reactRedux.useSelector;
+
   beforeEach(() => {
-    useDispatchMock.mockClear();
+    useDispatchMock.mockReturnValue(dispatchMock);
+    useSelectorMock.mockReset();
     dispatchMock.mockClear();
   });
 
   it('renders correctly and does not dispatch getTaxonomySchema action when schema is available', async () => {
     const setShow = jest.fn();
-    const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
-    useSelectorMock.mockReturnValue([
-      {
+    useSelectorMock
+      .mockReturnValueOnce({
         fieldsets: [
           { fields: ['field_description', 'field_title', 'taxonomy'] },
         ],
-      },
-      true,
-    ]);
+      })
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false);
 
     render(
       <Provider store={store}>
@@ -81,10 +83,13 @@ describe('AddTaxonomy', () => {
     });
   });
 
-  it('renders correctly and does not dispatch getTaxonomySchema action when schema is available', async () => {
+  it('dispatches getTaxonomySchema action when schema is not available', async () => {
     const setShow = jest.fn();
-    const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
-    useSelectorMock.mockReturnValue([undefined, true]);
+    useSelectorMock
+      .mockReturnValueOnce(undefined)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false);
+
     render(
       <Provider store={store}>
         <AddTaxonomy setShow={setShow} />

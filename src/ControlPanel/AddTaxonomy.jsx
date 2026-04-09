@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { ModalForm, Toast } from '@plone/volto/components';
+import Toast from '@plone/volto/components/manage/Toast/Toast';
+import ModalForm from '@plone/volto/components/manage/Form/ModalForm';
 import { defineMessages, useIntl } from 'react-intl';
-import { getTaxonomySchema, addTaxonomy } from '../actions';
+import { getTaxonomySchema, addTaxonomy } from '@eeacms/volto-taxonomy/actions';
 
 const messages = defineMessages({
   added: {
@@ -15,15 +16,14 @@ const messages = defineMessages({
     defaultMessage: 'Success',
   },
 });
+
 const AddTaxonomy = (props) => {
   const intl = useIntl();
   const { setShow } = props;
   const dispatch = useDispatch();
-  const [schema, loaded] = useSelector((state) => [
-    state.taxonomy?.schema?.schema,
-    state.taxonomy?.schema?.get?.loaded,
-  ]);
-  const [loading] = useSelector((state) => [state?.taxonomy?.add?.loading]);
+  const schema = useSelector((state) => state.taxonomy?.schema?.schema);
+  const loaded = useSelector((state) => state.taxonomy?.schema?.get?.loaded);
+  const loading = useSelector((state) => state?.taxonomy?.add?.loading);
 
   const [error, setError] = React.useState('');
 
