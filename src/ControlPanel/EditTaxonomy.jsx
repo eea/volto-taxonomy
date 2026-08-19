@@ -407,7 +407,7 @@ export default withRouter((props) => {
                     icon
                     onClick={() => {
                       setTreeData((state) =>
-                        state.concat({
+                        (state || []).concat({
                           title: '',
                           key: uuid(),
                         }),
