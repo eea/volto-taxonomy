@@ -11,6 +11,7 @@ import {
   Grid,
 } from 'semantic-ui-react';
 import Helmet from '@plone/volto/helpers/Helmet/Helmet';
+import { useClient } from '@plone/volto/hooks/client/useClient';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -90,6 +91,7 @@ export default withRouter((props) => {
   const intl = useIntl();
   const [treeData, setTreeData] = React.useState(null);
   const [sortableTreeLib, setSortableTreeLib] = React.useState(null);
+  const isClient = useClient();
 
   const [languageToShow, setLanguage] = React.useState(null);
 
@@ -424,7 +426,7 @@ export default withRouter((props) => {
         </Segment.Group>
       </Container>
 
-      {__CLIENT__ && (
+      {isClient && (
         <Portal node={document.getElementById('toolbar')}>
           <Toolbar
             pathname={props.location.pathname}

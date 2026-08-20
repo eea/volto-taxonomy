@@ -13,6 +13,7 @@ import {
   Checkbox,
 } from 'semantic-ui-react';
 import Helmet from '@plone/volto/helpers/Helmet/Helmet';
+import { useClient } from '@plone/volto/hooks/client/useClient';
 import { toast } from 'react-toastify';
 import { defineMessages, useIntl, FormattedMessage } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
@@ -53,6 +54,7 @@ const Taxonomies = (props) => {
   const [show, setShow] = React.useState(false);
   const [selected, setSelected] = React.useState([]);
   const [showDelete, setShowDelete] = React.useState(false);
+  const isClient = useClient();
 
   React.useEffect(() => {
     dispatch(listTaxonomies());
@@ -172,7 +174,7 @@ const Taxonomies = (props) => {
         </Segment>
       </Segment.Group>
 
-      {__CLIENT__ && (
+      {isClient && (
         <Portal node={document.getElementById('toolbar')}>
           <Toolbar
             pathname={props.location.pathname}
