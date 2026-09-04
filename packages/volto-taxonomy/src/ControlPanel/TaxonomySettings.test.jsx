@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
@@ -7,21 +8,21 @@ import TaxonomySettings from './TaxonomySettings';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-intl-redux';
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useDispatch: jest.fn(),
-  useSelector: jest.fn(),
+vi.mock('react-redux', async () => ({
+  ...(await vi.importActual('react-redux')),
+  useDispatch: vi.fn(),
+  useSelector: vi.fn(),
 }));
 
-jest.mock('react-toastify', () => ({
+vi.mock('react-toastify', () => ({
   toast: {
-    success: jest.fn(),
-    error: jest.fn(),
+    success: vi.fn(),
+    error: vi.fn(),
   },
 }));
 
-jest.mock('@eeacms/volto-taxonomy/actions', () => ({
-  getTaxonomySchema: jest.fn().mockReturnValue({
+vi.mock('@eeacms/volto-taxonomy/actions', () => ({
+  getTaxonomySchema: vi.fn().mockReturnValue({
     type: 'GET_TAXONOMYSCHEMA',
     request: {
       op: 'get',
@@ -31,9 +32,9 @@ jest.mock('@eeacms/volto-taxonomy/actions', () => ({
   }),
 }));
 
-jest.mock('@plone/volto/components/manage/Form/Form', () => ({
+vi.mock('@plone/volto/components/manage/Form/Form', () => ({
   __esModule: true,
-  default: jest.fn(({ formData, schema, onSubmit }) => {
+  default: vi.fn(({ formData, schema, onSubmit }) => {
     const handleSubmit = (e) => {
       e.preventDefault();
       onSubmit(formData);
@@ -59,11 +60,11 @@ const store = mockStore({
   intl: {
     locale: 'en',
     messages: {},
-    formatMessage: jest.fn(),
+    formatMessage: vi.fn(),
   },
 });
 
-const dispatchMock = jest.fn();
+const dispatchMock = vi.fn();
 
 describe('TaxonomySettings', () => {
   const useDispatchMock = reactRedux.useDispatch;
