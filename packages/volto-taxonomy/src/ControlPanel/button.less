@@ -8,7 +8,7 @@
     transform: translateY(-50%);
   }
 
-  .taxonomy-tree-wrapper .rst__rowToolbar {
+  .taxonomy-tree-wrapper .taxonomy-tree-toolbar {
     .ui.button.icon.item {
       background: none;
 
@@ -26,5 +26,65 @@
     button {
       border-radius: 50%;
     }
+  }
+}
+
+.taxonomy-tree {
+  padding: 0;
+  margin: 1em 0;
+  list-style: none;
+
+  .taxonomy-tree-node {
+    margin-bottom: 0.5em;
+    list-style: none;
+
+    &.ghost {
+      opacity: 0.5;
+    }
+  }
+
+  .taxonomy-tree-row {
+    display: flex;
+    align-items: center;
+    padding: 0.25em 0.5em;
+    border: 1px solid #c7d5d8;
+    background: #fff;
+    gap: 0.5em;
+
+    button {
+      display: flex;
+      align-items: center;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+  }
+
+  .taxonomy-tree-handle {
+    cursor: grab !important;
+    touch-action: none;
+  }
+
+  .taxonomy-tree-toggle {
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  .taxonomy-tree-content {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  .taxonomy-tree-toolbar {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .clone .taxonomy-tree-row {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 }
