@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
@@ -5,24 +6,24 @@ import AddTaxonomy from './AddTaxonomy';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-intl-redux';
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useDispatch: jest.fn(),
-  useSelector: jest.fn(),
+vi.mock('react-redux', async () => ({
+  ...(await vi.importActual('react-redux')),
+  useDispatch: vi.fn(),
+  useSelector: vi.fn(),
 }));
 
-jest.mock('react-toastify', () => ({
+vi.mock('react-toastify', () => ({
   toast: {
-    success: jest.fn(),
-    error: jest.fn(),
+    success: vi.fn(),
+    error: vi.fn(),
   },
 }));
 
 const mockStore = configureStore([]);
 
-jest.mock('@plone/volto/components/manage/Form/ModalForm', () => ({
+vi.mock('@plone/volto/components/manage/Form/ModalForm', () => ({
   __esModule: true,
-  default: jest.fn(() => {
+  default: vi.fn(() => {
     return <div>Modal Form</div>;
   }),
 }));
@@ -45,11 +46,11 @@ const store = mockStore({
   intl: {
     locale: 'en',
     messages: {},
-    formatMessage: jest.fn(),
+    formatMessage: vi.fn(),
   },
 });
 
-const dispatchMock = jest.fn();
+const dispatchMock = vi.fn();
 
 describe('AddTaxonomy', () => {
   const useDispatchMock = reactRedux.useDispatch;
@@ -62,7 +63,7 @@ describe('AddTaxonomy', () => {
   });
 
   it('renders correctly and does not dispatch getTaxonomySchema action when schema is available', async () => {
-    const setShow = jest.fn();
+    const setShow = vi.fn();
     useSelectorMock
       .mockReturnValueOnce({
         fieldsets: [
@@ -84,7 +85,7 @@ describe('AddTaxonomy', () => {
   });
 
   it('dispatches getTaxonomySchema action when schema is not available', async () => {
-    const setShow = jest.fn();
+    const setShow = vi.fn();
     useSelectorMock
       .mockReturnValueOnce(undefined)
       .mockReturnValueOnce(true)
