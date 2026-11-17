@@ -298,6 +298,7 @@ export default withRouter((props) => {
                                   key="delete-node"
                                   icon
                                   as={Button}
+                                  data-cy="taxonomy-delete-node"
                                   onClick={() => {
                                     const count = getTermUsage(
                                       request?.usage,
