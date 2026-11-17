@@ -84,6 +84,7 @@ const TaxonomySettings = (props) => {
   }, [taxonomySchema]);
 
   const formData = {
+    default_language: taxonomy?.default_language,
     field_description: taxonomy?.description,
     field_title: taxonomy?.title,
     taxonomy_fieldset: taxonomy?.fieldset,

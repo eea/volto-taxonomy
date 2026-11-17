@@ -180,4 +180,40 @@ describe('TaxonomySettings', () => {
     expect(schema.fieldsets[0].fields).not.toContain('field_prefix');
     expect(formData).not.toHaveProperty('field_prefix');
   });
+
+  it('keeps the taxonomy default language in the form data', async () => {
+    const match = { params: { id: '1' } };
+    const history = createMemoryHistory();
+    Form.mockClear();
+    useSelectorMock
+      .mockReturnValueOnce({
+        description: 'desc',
+        title: 'title',
+        name: 'name',
+        default_language: 'fr',
+      })
+      .mockReturnValueOnce({
+        fieldsets: [{ fields: ['field_title', 'default_language'] }],
+        properties: {
+          field_title: { type: 'string' },
+          default_language: { type: 'string', default: 'en' },
+        },
+        required: ['field_title'],
+      })
+      .mockReturnValueOnce(true);
+
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <TaxonomySettings match={match} />
+        </Router>
+      </Provider>,
+    );
+
+    await waitFor(() => {
+      expect(Form).toHaveBeenCalled();
+    });
+    const { formData } = Form.mock.calls.at(-1)[0];
+    expect(formData.default_language).toBe('fr');
+  });
 });
