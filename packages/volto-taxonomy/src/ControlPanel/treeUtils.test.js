@@ -5,6 +5,7 @@ import {
   flattenTree,
   getFlatDataFromTree,
   getProjection,
+  getTermUsage,
   moveItem,
   removeChildrenOf,
   removeNodeAtPath,
@@ -184,5 +185,16 @@ describe('checkForDuplicates', () => {
     data[0].children[0].expanded = false;
     expect(checkForDuplicates(getFlatDataFromTree(data))).toBe(true);
     expect(checkForDuplicates(getFlatDataFromTree(tree()))).toBe(false);
+  });
+});
+
+describe('getTermUsage', () => {
+  it('returns the count of a term', () => {
+    expect(getTermUsage({ mars: 3, mission: 1 }, 'mars')).toBe(3);
+  });
+
+  it('returns 0 for unused terms and without usage data', () => {
+    expect(getTermUsage({ mars: 3 }, 'venus')).toBe(0);
+    expect(getTermUsage(undefined, 'mars')).toBe(0);
   });
 });

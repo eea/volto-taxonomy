@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Confirm,
   Container,
   Header,
   Segment,
@@ -37,6 +38,7 @@ import {
   addNodeUnderParent,
   changeNodeAtPath,
   getFlatDataFromTree,
+  getTermUsage,
   removeNodeAtPath,
 } from './treeUtils';
 
@@ -81,6 +83,15 @@ const messages = defineMessages({
     id: 'Delete node',
     defaultMessage: 'Delete node',
   },
+  deleteUsedNodeHeader: {
+    id: 'Delete a term that is in use?',
+    defaultMessage: 'Delete a term that is in use?',
+  },
+  deleteUsedNodeContent: {
+    id: 'deleteUsedNodeContent',
+    defaultMessage:
+      '"{title}" is used by {count, plural, one {# content item} other {# content items}}, counting the terms below it. Deleting it removes it from these items.',
+  },
 });
 
 export function checkForDuplicates(flatdata = []) {
@@ -97,6 +108,8 @@ export default withRouter((props) => {
   const isClient = useClient();
 
   const [languageToShow, setLanguage] = React.useState(null);
+  // A term in use waiting for confirmation before it is deleted.
+  const [pendingDelete, setPendingDelete] = React.useState(null);
 
   const defaultLanguage = config.settings.languages.find(
     (lang) => lang.code === request?.default_language,
@@ -151,6 +164,8 @@ export default withRouter((props) => {
         }),
       )
         .then(() => {
+          // Reload to get the usage counts of the saved tree.
+          dispatch(getTaxonomy(id));
           toast.success(
             <Toast
               success
@@ -182,6 +197,29 @@ export default withRouter((props) => {
 
   return (
     <>
+      <Confirm
+        open={!!pendingDelete}
+        header={intl.formatMessage(messages.deleteUsedNodeHeader)}
+        content={
+          pendingDelete
+            ? intl.formatMessage(messages.deleteUsedNodeContent, {
+                title: pendingDelete.title,
+                count: pendingDelete.count,
+              })
+            : ''
+        }
+        cancelButton={intl.formatMessage({
+          id: 'Cancel',
+          defaultMessage: 'Cancel',
+        })}
+        confirmButton={intl.formatMessage(messages.deleteNode)}
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={() => {
+          setTreeData(removeNodeAtPath(treeData, pendingDelete.path));
+          setPendingDelete(null);
+        }}
+        size={null}
+      />
       <Container id="page-taxonomies" className="controlpanel-taxonomies">
         <Helmet title="Taxonomies" />
         <Segment.Group raised>
@@ -261,9 +299,21 @@ export default withRouter((props) => {
                                   icon
                                   as={Button}
                                   onClick={() => {
-                                    setTreeData(
-                                      removeNodeAtPath(treeData, path),
+                                    const count = getTermUsage(
+                                      request?.usage,
+                                      node.key,
                                     );
+                                    if (count > 0) {
+                                      setPendingDelete({
+                                        path,
+                                        count,
+                                        title: getTranslatedNodeTitle(node),
+                                      });
+                                    } else {
+                                      setTreeData(
+                                        removeNodeAtPath(treeData, path),
+                                      );
+                                    }
                                   }}
                                 >
                                   <Icon

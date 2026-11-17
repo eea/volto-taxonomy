@@ -5,6 +5,7 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import TaxonomySettings from './TaxonomySettings';
+import Form from '@plone/volto/components/manage/Form/Form';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-intl-redux';
 
@@ -135,5 +136,48 @@ describe('TaxonomySettings', () => {
         },
       });
     });
+  });
+
+  it('does not offer or send the field prefix', async () => {
+    const match = { params: { id: '1' } };
+    const history = createMemoryHistory();
+    Form.mockClear();
+    useSelectorMock
+      .mockReturnValueOnce({
+        description: 'desc',
+        title: 'title',
+        name: 'name',
+        prefix: 'taxonomy_',
+      })
+      .mockReturnValueOnce({
+        fieldsets: [
+          {
+            fields: ['field_title', 'field_prefix', 'taxonomy'],
+          },
+        ],
+        properties: {
+          field_title: { type: 'string' },
+          field_prefix: { type: 'string' },
+          taxonomy: { type: 'string' },
+        },
+        required: ['field_title'],
+      })
+      .mockReturnValueOnce(true);
+
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <TaxonomySettings match={match} />
+        </Router>
+      </Provider>,
+    );
+
+    await waitFor(() => {
+      expect(Form).toHaveBeenCalled();
+    });
+    const { schema, formData } = Form.mock.calls.at(-1)[0];
+    expect(schema.properties).not.toHaveProperty('field_prefix');
+    expect(schema.fieldsets[0].fields).not.toContain('field_prefix');
+    expect(formData).not.toHaveProperty('field_prefix');
   });
 });
