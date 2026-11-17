@@ -189,3 +189,11 @@ export function addNodeUnderParent(treeData, parentPath, newNode) {
     { ...node, expanded: true, children: [...getChildren(node), newNode] },
   ]);
 }
+
+/*
+ * Number of content items that use a term or a term below it. collective.taxonomy
+ * returns these counts (`usage`) with the taxonomy to managers, for the saved tree.
+ */
+export function getTermUsage(usage, key) {
+  return usage?.[key] || 0;
+}
