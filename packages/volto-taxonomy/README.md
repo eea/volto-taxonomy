@@ -17,10 +17,12 @@ Edit [collective.taxonomy](https://github.com/collective/collective.taxonomy#tax
 
 ## Compatibility
 
-| Add-on | Volto  |
-| ------ | ------ |
-| 7.x    | 19.x   |
-| 6.x    | 18.x   |
+| Add-on | Volto        |
+| ------ | ------------ |
+| 7.x    | 18.x and 19.x |
+| 6.x    | 18.x         |
+
+The tree editor of 7.x uses the `dnd-kit` loadables shipped by Volto.`
 
 ## Requirements
 
