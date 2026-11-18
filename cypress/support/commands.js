@@ -483,3 +483,69 @@ Cypress.Commands.add('store', () => {
 Cypress.Commands.add('settings', (key, value) => {
   return cy.window().its('settings');
 });
+
+// --- Create taxonomy -------------------------------------------------------------
+Cypress.Commands.add('createTaxonomy', ({ name, title, terms = [] }) => {
+  let api_url, auth;
+  api_url = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
+  auth = {
+    user: 'admin',
+    pass: 'admin',
+  };
+  return cy
+    .request({
+      method: 'POST',
+      url: `${api_url}/@taxonomy`,
+      headers: {
+        Accept: 'application/json',
+      },
+      auth: auth,
+      body: {
+        taxonomy: name,
+        field_title: title,
+        field_description: `${title} description`,
+        default_language: 'en',
+      },
+    })
+    .then((response) => {
+      const taxonomy = response.body.name;
+      if (!terms.length) {
+        return taxonomy;
+      }
+      return cy
+        .request({
+          method: 'PATCH',
+          url: `${api_url}/@taxonomy/${taxonomy}`,
+          headers: {
+            Accept: 'application/json',
+          },
+          auth: auth,
+          body: {
+            taxonomy: taxonomy,
+            title: title,
+            languages: ['en'],
+            tree: terms,
+          },
+        })
+        .then(() => taxonomy);
+    });
+});
+
+// --- Remove taxonomy -------------------------------------------------------------
+Cypress.Commands.add('removeTaxonomy', (name) => {
+  let api_url, auth;
+  api_url = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
+  auth = {
+    user: 'admin',
+    pass: 'admin',
+  };
+  return cy.request({
+    method: 'DELETE',
+    url: `${api_url}/@taxonomy/${name}`,
+    headers: {
+      Accept: 'application/json',
+    },
+    auth: auth,
+    failOnStatusCode: false,
+  });
+});
