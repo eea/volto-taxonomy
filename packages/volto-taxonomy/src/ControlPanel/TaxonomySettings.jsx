@@ -76,15 +76,18 @@ const TaxonomySettings = (props) => {
           },
         },
       },
-      ['taxonomy'],
+      // The field prefix is part of the field and index name. Changing it
+      // after content uses the taxonomy breaks listings, so it is not
+      // offered here and not sent on save.
+      ['taxonomy', 'field_prefix'],
     );
   }, [taxonomySchema]);
 
   const formData = {
+    default_language: taxonomy?.default_language,
     field_description: taxonomy?.description,
     field_title: taxonomy?.title,
     taxonomy_fieldset: taxonomy?.fieldset,
-    field_prefix: taxonomy?.prefix,
     taxonomy: taxonomy?.name,
   };
 
